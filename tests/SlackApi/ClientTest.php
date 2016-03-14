@@ -55,7 +55,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \SlackApi\Exceptions\ClientException
-     * @expectedExceptionMessageRegExp /^.*(404 Not Found).*$/
      */
     public function testRequestAPINotFoundMethod()
     {
