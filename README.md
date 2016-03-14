@@ -1,14 +1,12 @@
 # SlackApi
 
 [![Build Status](https://travis-ci.org/insidieux/SlackApi.svg?branch=master)](https://travis-ci.org/insidieux/SlackApi)
-[![Code Climate](https://codeclimate.com/github/insidieux/SlackApi/badges/gpa.svg)](https://codeclimate.com/github/insidieux/SlackApi)
-[![Test Coverage](https://codeclimate.com/github/insidieux/SlackApi/badges/coverage.svg)](https://codeclimate.com/github/insidieux/SlackApi/coverage)
 
 A simple PHP package for making request to [Slack API](https://api.slack.com/methods), focused on ease-of-use and elegant syntax.
 
 ## Requirements
 
-* PHP 5.6 or greater
+* PHP 5.5 or greater
 * GuzzleHttp 6.0 or greater
 
 ## Installation

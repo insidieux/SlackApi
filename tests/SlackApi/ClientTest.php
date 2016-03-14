@@ -55,7 +55,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \SlackApi\Exceptions\ClientException
-     * @expectedExceptionMessage Client error: `POST https://slack.com/api/api.not-found` resulted in a `404 Not Found` response:
      */
     public function testRequestAPINotFoundMethod()
     {
