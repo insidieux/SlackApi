@@ -8,6 +8,12 @@ php:
 
 sudo: false
 
+cache:
+  bundler: true
+  directories:
+  - vendor/guzzlehttp
+  - vendor/psr
+
 matrix:
   include:
     - php: 5.6
