@@ -8,7 +8,7 @@ A simple PHP package for making request to [Slack API](https://api.slack.com/met
 
 ## Requirements
 
-* PHP 5.5 or greater
+* PHP 5.6 or greater
 * GuzzleHttp 6.0 or greater
 
 ## Installation
