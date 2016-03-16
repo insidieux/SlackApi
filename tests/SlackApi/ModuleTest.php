@@ -12,7 +12,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client($_ENV['SLACK_TEST_TOKEN'], new \GuzzleHttp\Client));
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
 
         $response = $module->request('GET', 'test');
         $this->assertArrayHasKey('ok', $response);
@@ -28,7 +28,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client($_ENV['SLACK_TEST_TOKEN'], new \GuzzleHttp\Client));
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
 
         $response = $module->get('test');
         $this->assertArrayHasKey('ok', $response);
@@ -40,7 +40,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testPostRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client($_ENV['SLACK_TEST_TOKEN'], new \GuzzleHttp\Client));
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
 
         $response = $module->post('test');
         $this->assertArrayHasKey('ok', $response);
