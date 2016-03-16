@@ -52,7 +52,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testPredefinedRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client($_ENV['SLACK_TEST_TOKEN'], new \GuzzleHttp\Client));
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
 
         $response = $module->test();
         $this->assertArrayHasKey('ok', $response);
