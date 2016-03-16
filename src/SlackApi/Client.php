@@ -3,6 +3,7 @@ namespace SlackApi;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
+
 use SlackApi\Exceptions\ClientException;
 use SlackApi\Modules;
 
@@ -15,52 +16,55 @@ use SlackApi\Modules;
 class Client
 {
     /**
-     * @var string
+     *
      */
-    private $baseUrl = 'https://slack.com/api';
-
-    private $modulesDirectory = '\SlackApi\Modules';
+    const API_URL = 'https://slack.com/api';
 
     /**
+     * API token
+     *
      * @var string
      */
-    protected $token;
+    private $token;
 
     /**
+     * Guzzle client for making http/curl requests to API
+     *
      * @var ClientInterface
      */
-    protected $client;
+    private $client;
 
     /**
-     * @var array
+     * @var string[]
      */
-    protected $directories = [];
+    private $modules = [];
 
     /**
      * Client constructor.
-     * @param string          $token
-     * @param ClientInterface $client
+     * @param string          $token - API token
+     * @param ClientInterface $client - Guzzle client for making http/curl requests to API
      */
     public function __construct($token, ClientInterface $client)
     {
-        $this->setToken($token);
-        $this->setClient($client);
-        $this->addDirectory($this->modulesDirectory);
-    }
-
-    /**
-     * @param string $token
-     * @return static
-     */
-    public function setToken($token)
-    {
         $this->token = $token;
-        return $this;
+        $this->client = $client;
+
+        $directory = __DIR__ . DIRECTORY_SEPARATOR . 'Modules' . DIRECTORY_SEPARATOR;
+        $namespace = __NAMESPACE__ . '\\Modules\\';
+        foreach (glob($directory . '*.php') as $file) {
+            if (sscanf($file, $directory . '%s.php', $file) === false) {
+                continue;
+            }
+            $file = str_replace(['/', '.php'], ['\\', ''], $file);
+            $this->registerModule($file, $namespace . $file);
+        }
     }
 
     /**
+     * Set Guzzle client for making http/curl requests to API
+     *
      * @param ClientInterface $client
-     * @return static
+     * @return $this
      */
     public function setClient(ClientInterface $client)
     {
@@ -69,56 +73,49 @@ class Client
     }
 
     /**
-     * @param string $directory
-     * @return static
+     * Register class with API implementation for next calls, associated with API module
+     *
+     * @param string $module - API module, for example 'Users'
+     * @param string $class - class name with methods implementation. MUST extends AbstractModule class
+     *
+     * @return $this
+     *
+     * @throws ClientException
      */
-    public function addDirectory($directory)
+    public function registerModule($module, $class)
     {
-        $this->directories[] = $directory;
+        if (!class_exists($class, true)) {
+            throw new ClientException("Class $class doesn't exists");
+        }
+        $module = $this->prepareModuleName($module);
+        $this->modules[$module]['class'] = $class;
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-
-    /**
-     * @return ClientInterface
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
+     * @param string $method - HTTP method - GET/POST/PUT and e.t.c
+     * @param string $request - API method, such as api.test
+     * @param array  $options - option for current API METHOD (if need to send)
+     *
      * @return array
-     */
-    public function getDirectories()
-    {
-        return $this->directories;
-    }
-
-    /**
-     * @param string $method
-     * @param string $request
-     * @param array  $options
      *
      * @throws ClientException
-     *
-     * @return array
      */
     public function request($method, $request, array $options = [])
     {
         try {
-            $request = $this->prepareUri($request);
-            $options = $this->prepareOptions($options);
-            $response = $this->getClient()->request($method, $request, $options);
-            $response = json_decode($response->getBody()->getContents(), true);
+            $request = self::API_URL . '/' . $request;
+            $options = array_merge_recursive([
+                RequestOptions::FORM_PARAMS => [
+                    'token' => $this->token
+                ]
+            ], $options);
+
+            $response = $this->client->request($method, $request, $options);
+
+            $response = $response->getBody()->getContents();
+            $response = json_decode($response, true);
+
             if (!is_array($response)) {
                 $message = 'Expected JSON-decoded response data to be of type "array", got "%s"';
                 $message = sprintf($message, gettype($response));
@@ -133,51 +130,47 @@ class Client
     /**
      * @param string $name
      * @param mixed  $arguments
-     * @return \SlackApi\Modules\AbstractModule
+     *
+     * @return \SlackApi\AbstractModule
      *
      * @throws ClientException
      */
     public function __call($name, $arguments)
     {
-        $name = ucfirst($name);
-        foreach ($this->getDirectories() as $directory) {
-            $class = "$directory\\$name";
-            if (!class_exists($class, true)) {
-                continue;
-            }
-            return new $class($this);
+        $name = $this->prepareModuleName($name);
+        if (!isset($this->modules[$name])) {
+            throw new ClientException("Module $name is not registered");
         }
-        throw new ClientException("Invalid API module $name called, class could not be found");
+
+        $module = $this->modules[$name];
+        if (!isset($module['class'])) {
+            throw new ClientException("Module $name class is not defined");
+        }
+
+        if (!isset($module['object'])) {
+            $module['object'] = new $module['class']($name, $this);
+        }
+
+        if (!($module['object'] instanceof AbstractModule)) {
+            throw new ClientException("Module $name class is not instance of AbstractModule");
+        }
+
+        return $module['object'];
     }
 
     /**
-     * @param string $method
+     * Prepare API module name for next usages
+     * - in register modules
+     * - in magic __call method
+     *
+     * @param string $module
+     *
      * @return string
      */
-    protected function prepareUri($method)
+    private function prepareModuleName($module)
     {
-        return $this->getBaseUrl() . '/' . $method;
-    }
-
-    /**
-     * @param array $options
-     * @return array
-     */
-    protected function prepareOptions(array $options = [])
-    {
-        $defaults = [
-            RequestOptions::FORM_PARAMS => [
-                'token' => $this->getToken()
-            ]
-        ];
-        return array_merge_recursive($defaults, $options);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getBaseUrl()
-    {
-        return $this->baseUrl;
+        $module = (string)$module;
+        $module = strtolower($module);
+        return ucfirst($module);
     }
 }

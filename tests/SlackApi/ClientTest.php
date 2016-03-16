@@ -14,18 +14,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
         $this->assertInstanceOf('\SlackApi\Client', $client);
-        $this->assertEquals('fake-token', $client->getToken());
-        $this->assertInstanceOf('\GuzzleHttp\Client', $client->getClient());
-    }
-
-    /**
-     *
-     */
-    public function testSetToken()
-    {
-        $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
-        $client->setToken('another-fake-token');
-        $this->assertEquals('another-fake-token', $client->getToken());
     }
 
     /**
@@ -34,9 +22,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testSetClient()
     {
         $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
-        $client->setClient(new \GuzzleHttp\Client(['custom-param' => 'custom-value']));
-        $this->assertInstanceOf('\GuzzleHttp\Client', $client->getClient());
-        $this->assertEquals('custom-value', $client->getClient()->getConfig('custom-param'));
+        $client = $client->setClient(new \GuzzleHttp\Client(['custom-param' => 'custom-value']));
+        $this->assertInstanceOf('\SlackApi\Client', $client);
     }
 
     /**
@@ -63,10 +50,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \SlackApi\Exceptions\ClientException
-     * @expectedExceptionMessage Invalid API module NotFound called, class could not be found
+     *
      */
-    public function testCallNotFoundModule()
+    public function testCallPredefinedModule()
+    {
+        $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
+        $this->assertInstanceOf('\SlackApi\Modules\Users', $client->users());
+    }
+
+    /**
+     * @expectedException \SlackApi\Exceptions\ClientException
+     * @expectedExceptionMessage Module Notfound is not registered
+     */
+    public function testCallNotRegisteredModule()
     {
         $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
         $client->notFound();
@@ -75,9 +71,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testCallPredefinedMethod()
+    public function testRegisterModule()
     {
         $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
-        $this->assertInstanceOf('\SlackApi\Modules\Users', $client->users());
+        $client = $client->registerModule('TestModule', \tests\Fixtures\TestModule::class);
+        $this->assertInstanceOf('\SlackApi\Client', $client);
+    }
+
+    /**
+     * @expectedException \SlackApi\Exceptions\ClientException
+     * @expectedExceptionMessage Class \tests\Fixtures\NonExists doesn't exists
+     */
+    public function testRegisterNonExistsModule()
+    {
+        $client = new \SlackApi\Client('fake-token', new \GuzzleHttp\Client);
+        $client = $client->registerModule('TestModule', '\tests\Fixtures\NonExists');
+        $this->assertInstanceOf('\SlackApi\Client', $client);
     }
 }
