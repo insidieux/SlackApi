@@ -1,8 +1,9 @@
 # SlackApi
 
 [![Build Status](https://travis-ci.org/insidieux/SlackApi.svg?branch=master)](https://travis-ci.org/insidieux/SlackApi)
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/b00ef4c01ef24daaaf57f99c345ad546)](https://www.codacy.com/app/ageev-pavel-v/SlackApi)
 [![Code Climate](https://codeclimate.com/github/insidieux/SlackApi/badges/gpa.svg)](https://codeclimate.com/github/insidieux/SlackApi)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/b00ef4c01ef24daaaf57f99c345ad546)](https://www.codacy.com/app/ageev-pavel-v/SlackApi)
+[![Codacy Badge](https://api.codacy.com/project/badge/coverage/b00ef4c01ef24daaaf57f99c345ad546)](https://www.codacy.com/app/insidieux/SlackApi)
 
 A simple PHP package for making request to [Slack API](https://api.slack.com/methods), focused on ease-of-use and elegant syntax.
 

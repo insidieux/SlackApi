@@ -1,7 +1,7 @@
 <?php
 namespace tests\Fixtures;
 
-use SlackApi\Modules\AbstractModule;
+use SlackApi\AbstractModule;
 
 /**
  * Class TestModule
@@ -10,10 +10,10 @@ use SlackApi\Modules\AbstractModule;
 class TestModule extends AbstractModule
 {
     /**
-     *
+     * @return array
      */
-    public function correctMethod()
+    public function test()
     {
-        $this->post(__METHOD__);
+        return $this->post('test');
     }
 }

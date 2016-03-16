@@ -10,19 +10,52 @@ class ModuleTest extends PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testInstantiation()
+    public function testRequest()
     {
-        $module = new TestModule(new \SlackApi\Client('fake-token', new \GuzzleHttp\Client));
-        $this->assertInstanceOf('\SlackApi\Client', $module->getClient());
-        $this->assertEquals('testmodule', $module->getName());
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+
+        $response = $module->request('GET', 'test');
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertTrue($response['ok']);
+
+        $response = $module->request('POST', 'test');
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertTrue($response['ok']);
     }
 
     /**
      *
      */
-    public function testGetRequestEndPoint()
+    public function testGetRequest()
     {
-        $module = new TestModule(new \SlackApi\Client('fake-token', new \GuzzleHttp\Client));
-        $this->assertEquals('testmodule.method', $module->getRequestEndPoint('method'));
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+
+        $response = $module->get('test');
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertTrue($response['ok']);
+    }
+
+    /**
+     *
+     */
+    public function testPostRequest()
+    {
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+
+        $response = $module->post('test');
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertTrue($response['ok']);
+    }
+
+    /**
+     *
+     */
+    public function testPredefinedRequest()
+    {
+        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+
+        $response = $module->test();
+        $this->assertArrayHasKey('ok', $response);
+        $this->assertTrue($response['ok']);
     }
 }
