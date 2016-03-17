@@ -125,7 +125,7 @@ class Client
             $response = $this->client->request($method, $request, $options);
             $response = $response->getBody()->getContents();
 
-            $this->prepareResponse($response);
+            return $this->prepareResponse($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
         }
