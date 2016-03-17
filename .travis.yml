@@ -14,9 +14,6 @@ cache:
   - vendor
 
 matrix:
-  include:
-    - php: 5.6
-      env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
   allow_failures:
     - php: hhvm
 
