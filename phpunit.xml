@@ -17,11 +17,11 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">src/</directory>
         </whitelist>
         <exclude>
-            <directory suffix=".php">src/SlackApi/Modules</directory>
-            <directory suffix=".php">src/SlackApi/Exceptions</directory>
+            <directory suffix=".php">src/SlackApi/Modules/</directory>
+            <directory suffix=".php">src/SlackApi/Exceptions/</directory>
         </exclude>
     </filter>
 </phpunit>

@@ -24,7 +24,6 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testEmptyResponse()
     {
         $response = new Response([]);
-        $this->assertFalse($response->getStatus());
         $this->assertFalse($response->isSuccess());
         $this->assertTrue($response->isError());
         $this->assertFalse($response->hasWarning());
@@ -47,7 +46,6 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testSuccessResponse()
     {
         $response = new Response(['ok' => true]);
-        $this->assertTrue($response->getStatus());
         $this->assertTrue($response->isSuccess());
         $this->assertFalse($response->isError());
     }

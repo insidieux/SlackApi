@@ -70,11 +70,11 @@ class Response
     /**
      * Return response status (value for field 'ok')
      *
-     * @return bool
+     * @return mixed
      */
     public function getStatus()
     {
-        return (bool)$this->get('ok', false);
+        return $this->get('ok', false);
     }
 
     /**
@@ -84,7 +84,7 @@ class Response
      */
     public function isSuccess()
     {
-        return $this->getStatus() === true;
+        return $this->get('ok', false) == true;
     }
 
     /**
@@ -94,7 +94,7 @@ class Response
      */
     public function isError()
     {
-        return $this->getStatus() === false;
+        return $this->get('ok', false) == false;
     }
 
     /**

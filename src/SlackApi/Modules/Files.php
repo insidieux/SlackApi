@@ -104,13 +104,13 @@ class Files extends AbstractModule
      * @link https://api.slack.com/methods/files.comments.delete
      *
      * @param string $file
-     * @param int    $id
+     * @param int    $commentId
      *
      * @return \SlackApi\Response
      */
-    public function commentsDelete($file, $id)
+    public function commentsDelete($file, $commentId)
     {
-        $this->post('comments.delete', ['file' => $file, 'id' => $id]);
+        $this->post('comments.delete', ['file' => $file, 'id' => $commentId]);
     }
 
     /**
