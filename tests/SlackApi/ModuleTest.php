@@ -1,26 +1,52 @@
 <?php
+namespace tests\SlackApi;
 
+use SlackApi\Client;
 use \tests\Fixtures\TestModule;
 
 /**
  * Class AbstractModuleTest
  */
-class ModuleTest extends PHPUnit_Framework_TestCase
+class ModuleTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return string
+     */
+    protected function getRealToken()
+    {
+        return getenv('SLACK_TEST_TOKEN');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFakeToken()
+    {
+        return 'fake-token';
+    }
+
+    /**
+     * @return Client
+     */
+    protected function getClient()
+    {
+        return new Client($this->getRealToken(), new \GuzzleHttp\Client);
+    }
+
     /**
      *
      */
     public function testRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+        $module = new TestModule('api', $this->getClient());
 
-        $response = $module->request('GET', 'test');
-        $this->assertArrayHasKey('ok', $response);
-        $this->assertTrue($response['ok']);
+        $response = $module->request('GET', 'test', ['argument' => 'value']);
+        $this->assertInstanceOf('\SlackApi\Response', $response);
+        $this->assertTrue($response->isSuccess());
 
-        $response = $module->request('POST', 'test');
-        $this->assertArrayHasKey('ok', $response);
-        $this->assertTrue($response['ok']);
+        $response = $module->request('POST', 'test', ['argument' => 'value']);
+        $this->assertInstanceOf('\SlackApi\Response', $response);
+        $this->assertTrue($response->isSuccess());
     }
 
     /**
@@ -28,11 +54,11 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+        $module = new TestModule('api', $this->getClient());
 
-        $response = $module->get('test');
-        $this->assertArrayHasKey('ok', $response);
-        $this->assertTrue($response['ok']);
+        $response = $module->get('test', ['argument' => 'value']);
+        $this->assertInstanceOf('\SlackApi\Response', $response);
+        $this->assertTrue($response->isSuccess());
     }
 
     /**
@@ -40,11 +66,11 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testPostRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+        $module = new TestModule('api', $this->getClient());
 
-        $response = $module->post('test');
-        $this->assertArrayHasKey('ok', $response);
-        $this->assertTrue($response['ok']);
+        $response = $module->get('test', ['argument' => 'value']);
+        $this->assertInstanceOf('\SlackApi\Response', $response);
+        $this->assertTrue($response->isSuccess());
     }
 
     /**
@@ -52,10 +78,10 @@ class ModuleTest extends PHPUnit_Framework_TestCase
      */
     public function testPredefinedRequest()
     {
-        $module = new TestModule('api', new \SlackApi\Client(getenv('SLACK_TEST_TOKEN'), new \GuzzleHttp\Client));
+        $module = new TestModule('api', $this->getClient());
 
         $response = $module->test();
-        $this->assertArrayHasKey('ok', $response);
-        $this->assertTrue($response['ok']);
+        $this->assertInstanceOf('\SlackApi\Response', $response);
+        $this->assertTrue($response->isSuccess());
     }
 }
