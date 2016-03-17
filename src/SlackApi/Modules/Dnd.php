@@ -56,4 +56,3 @@ class Dnd extends AbstractModule
         return $this->post('setSnooze', ['user' => $minutes]);
     }
 }
-
