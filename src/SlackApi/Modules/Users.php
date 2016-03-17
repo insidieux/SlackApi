@@ -17,7 +17,7 @@ class Users extends AbstractModule
      *
      * @param string $userId
      *
-     * @return array
+     * @return \SlackApi\Response
      */
     public function getPresence($userId)
     {
@@ -29,7 +29,7 @@ class Users extends AbstractModule
      *
      * @param string $userId
      *
-     * @return array
+     * @return \SlackApi\Response
      */
     public function info($userId)
     {
@@ -39,7 +39,7 @@ class Users extends AbstractModule
     /**
      * @link https://api.slack.com/methods/users.list
      *
-     * @return array
+     * @return \SlackApi\Response
      */
     public function getList()
     {
@@ -49,7 +49,7 @@ class Users extends AbstractModule
     /**
      * @link https://api.slack.com/methods/users.setActive
      *
-     * @return array
+     * @return \SlackApi\Response
      */
     public function setActive()
     {
@@ -61,7 +61,7 @@ class Users extends AbstractModule
      *
      * @param string $presence
      *
-     * @return array
+     * @return \SlackApi\Response
      */
     public function setPresence($presence)
     {

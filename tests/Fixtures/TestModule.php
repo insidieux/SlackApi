@@ -10,7 +10,7 @@ use SlackApi\AbstractModule;
 class TestModule extends AbstractModule
 {
     /**
-     * @return array
+     * @return \SlackApi\Response
      */
     public function test()
     {

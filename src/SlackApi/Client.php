@@ -11,7 +11,19 @@ use SlackApi\Modules;
  * Class Client
  * @package SlackApi
  *
- * @method Modules\Users users()
+ * @method Modules\Channels     channels()
+ * @method Modules\Chat         chat()
+ * @method Modules\Dnd          dnd()
+ * @method Modules\Emoji        emoji()
+ * @method Modules\Files        files()
+ * @method Modules\Groups       groups()
+ * @method Modules\Im           im()
+ * @method Modules\Oauth        oauth()
+ * @method Modules\Pins         pins()
+ * @method Modules\Search       search()
+ * @method Modules\Team         team()
+ * @method Modules\UserGroups   usergroups()
+ * @method Modules\Users        users()
  */
 class Client
 {
@@ -52,11 +64,10 @@ class Client
         $directory = __DIR__ . DIRECTORY_SEPARATOR . 'Modules' . DIRECTORY_SEPARATOR;
         $namespace = __NAMESPACE__ . '\\Modules\\';
         foreach (glob($directory . '*.php') as $file) {
-            if (sscanf($file, $directory . '%s.php', $file) === false) {
-                continue;
+            if (sscanf($file, $directory . '%s.php', $file) !== false) {
+                $file = str_replace(['/', '.php'], ['\\', ''], $file);
+                $this->registerModule($file, $namespace . $file);
             }
-            $file = str_replace(['/', '.php'], ['\\', ''], $file);
-            $this->registerModule($file, $namespace . $file);
         }
     }
 
@@ -97,7 +108,7 @@ class Client
      * @param string $request - API method, such as api.test
      * @param array  $options - option for current API METHOD (if need to send)
      *
-     * @return array
+     * @return Response - current library Response object
      *
      * @throws ClientException
      */
@@ -115,20 +126,19 @@ class Client
 
             $response = $response->getBody()->getContents();
             $response = json_decode($response, true);
-
             if (!is_array($response)) {
                 $message = 'Expected JSON-decoded response data to be of type "array", got "%s"';
                 $message = sprintf($message, gettype($response));
                 throw new ClientException($message);
             }
-            return $response;
+            return new Response($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
     /**
-     * @param string $name
+     * @param string $name - API module name for next calls
      * @param mixed  $arguments
      *
      * @return \SlackApi\AbstractModule
@@ -143,16 +153,12 @@ class Client
         }
 
         $module = $this->modules[$name];
-        if (!isset($module['class'])) {
-            throw new ClientException("Module $name class is not defined");
-        }
-
         if (!isset($module['object'])) {
             $module['object'] = new $module['class']($name, $this);
         }
 
         if (!($module['object'] instanceof AbstractModule)) {
-            throw new ClientException("Module $name class is not instance of AbstractModule");
+            throw new ClientException("Class for module $name is not instance of AbstractModule");
         }
 
         return $module['object'];

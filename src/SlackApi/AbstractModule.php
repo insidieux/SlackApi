@@ -40,7 +40,7 @@ abstract class AbstractModule
      * @param string $request
      * @param array  $options
      *
-     * @return array
+     * @return Response
      */
     public function get($request, array $options = [])
     {
@@ -53,7 +53,7 @@ abstract class AbstractModule
      * @param string $request
      * @param array  $options
      *
-     * @return array
+     * @return Response
      */
     public function post($request, array $options = [])
     {
@@ -67,7 +67,7 @@ abstract class AbstractModule
      * @param string $request
      * @param array  $options
      *
-     * @return array
+     * @return Response
      *
      * @throws Exceptions\ClientException
      */
