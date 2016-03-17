@@ -123,15 +123,9 @@ class Client
             ], $options);
 
             $response = $this->client->request($method, $request, $options);
-
             $response = $response->getBody()->getContents();
-            $response = json_decode($response, true);
-            if (!is_array($response)) {
-                $message = 'Expected JSON-decoded response data to be of type "array", got "%s"';
-                $message = sprintf($message, gettype($response));
-                throw new ClientException($message);
-            }
-            return new Response($response);
+
+            $this->prepareResponse($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -162,6 +156,26 @@ class Client
         }
 
         return $module['object'];
+    }
+
+    /**
+     * Return current library Response object or throw ClientException if json_decode failed
+     *
+     * @param string $response
+     *
+     * @return Response
+     *
+     * @throws ClientException
+     */
+    private function prepareResponse($response)
+    {
+        $response = json_decode($response, true);
+        if (!is_array($response)) {
+            $message = 'Expected JSON-decoded response data to be of type "array", got "%s"';
+            $message = sprintf($message, gettype($response));
+            throw new ClientException($message);
+        }
+        return new Response($response);
     }
 
     /**

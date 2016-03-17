@@ -68,16 +68,6 @@ class Response
     }
 
     /**
-     * Return response status (value for field 'ok')
-     *
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->get('ok', false);
-    }
-
-    /**
      * Check response status is ok (field 'ok' === true)
      *
      * @return bool
