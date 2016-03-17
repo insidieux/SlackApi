@@ -1,15 +1,8 @@
 {
-  "name": "insidieux/SlackApi",
+  "name": "insidieux/slack-api",
   "type": "library",
   "description": "Simple Slack API client wih predefined methods",
-  "keywords": [
-    "insidieux",
-    "SlackApi",
-    "http",
-    "curl",
-    "client",
-    "API"
-  ],
+  "keywords": ["insidieux", "Slack", "http", "curl", "client", "API"],
   "license": "MIT",
   "authors": [
     {
