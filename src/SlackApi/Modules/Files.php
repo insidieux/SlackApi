@@ -117,13 +117,13 @@ class Files extends AbstractModule
      * @link https://api.slack.com/methods/files.comments.edit
      *
      * @param string $file
-     * @param int    $id
+     * @param int    $commentId
      * @param string $text
      *
      * @return \SlackApi\Response
      */
-    public function commentsEdit($file, $id, $text)
+    public function commentsEdit($file, $commentId, $text)
     {
-        $this->post('comments.edit', ['file' => $file, 'id' => $id, 'text' => $text]);
+        $this->post('comments.edit', ['file' => $file, 'id' => $commentId, 'text' => $text]);
     }
 }
