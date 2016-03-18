@@ -18,7 +18,7 @@ A simple PHP package for making request to [Slack API](https://api.slack.com/met
 You can install the package using the [Composer](https://getcomposer.org/) package manager. You can install it by running this command in your project root:
 
 ```sh
-composer require insidieux/SlackApi
+composer require insidieux/slack-api
 ```
 
 ## Usage
