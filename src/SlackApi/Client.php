@@ -7,6 +7,8 @@ use GuzzleHttp\RequestOptions;
 use SlackApi\Exceptions\ClientException;
 use SlackApi\Modules;
 
+use \Psr\Http\Message\ResponseInterface;
+
 /**
  * Class Client
  * @package SlackApi
@@ -123,8 +125,6 @@ class Client
             ], $options);
 
             $response = $this->client->request($method, $request, $options);
-            $response = $response->getBody()->getContents();
-
             return $this->prepareResponse($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
@@ -161,14 +161,15 @@ class Client
     /**
      * Return current library Response object or throw ClientException if json_decode failed
      *
-     * @param string $response
+     * @param ResponseInterface $response
      *
      * @return Response
      *
      * @throws ClientException
      */
-    private function prepareResponse($response)
+    public function prepareResponse(ResponseInterface $response)
     {
+        $response = $response->getBody()->getContents();
         $response = json_decode($response, true);
         if (!is_array($response)) {
             $message = 'Expected JSON-decoded response data to be of type "array", got "%s"';
