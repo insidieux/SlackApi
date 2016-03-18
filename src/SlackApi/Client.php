@@ -118,7 +118,7 @@ class Client
     {
         try {
             $request = self::API_URL . '/' . $request;
-            if (!empty($options)){
+            if (!empty($options)) {
                 $request .= '?' . http_build_query($options);
             }
             $authentication = [
