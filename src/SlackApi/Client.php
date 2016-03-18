@@ -118,13 +118,15 @@ class Client
     {
         try {
             $request = self::API_URL . '/' . $request;
-            $options = array_merge_recursive([
+            if (!empty($options)){
+                $request .= '?' . http_build_query($options);
+            }
+            $authentication = [
                 RequestOptions::FORM_PARAMS => [
                     'token' => $this->token
                 ]
-            ], $options);
-
-            $response = $this->client->request($method, $request, $options);
+            ];
+            $response = $this->client->request($method, $request, $authentication);
             return $this->prepareResponse($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
