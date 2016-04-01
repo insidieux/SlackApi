@@ -38,26 +38,26 @@ abstract class AbstractModule
      * Common helper to make get requests
      *
      * @param string $request
-     * @param array  $options
+     * @param array  $parameters
      *
      * @return Response
      */
-    public function get($request, array $options = [])
+    public function get($request, array $parameters = [])
     {
-        return $this->request('GET', $request, $options);
+        return $this->request('GET', $request, $parameters);
     }
 
     /**
      * Common helper to make post requests
      *
      * @param string $request
-     * @param array  $options
+     * @param array  $parameters
      *
      * @return Response
      */
-    public function post($request, array $options = [])
+    public function post($request, array $parameters = [])
     {
-        return $this->request('POST', $request, $options);
+        return $this->request('POST', $request, $parameters);
     }
 
     /**
@@ -65,15 +65,15 @@ abstract class AbstractModule
      *
      * @param string $method
      * @param string $request
-     * @param array  $options
+     * @param array  $parameters
      *
      * @return Response
      *
      * @throws Exceptions\ClientException
      */
-    public function request($method, $request, array $options = [])
+    public function request($method, $request, array $parameters = [])
     {
-        return $this->client->request($method, $this->getRequestEndPoint($request), $options);
+        return $this->client->request($method, $this->getRequestEndPoint($request), $parameters);
     }
 
     /**
