@@ -1,8 +1,10 @@
 <?php
 namespace SlackApi;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\RequestOptions;
+use \Guzzle\Http\Message\RequestInterface;
+
+use \GuzzleHttp\ClientInterface;
+use \GuzzleHttp\RequestOptions;
 
 use SlackApi\Exceptions\ClientException;
 use SlackApi\Modules;
@@ -106,27 +108,36 @@ class Client
     }
 
     /**
-     * @param string $method - HTTP method - GET/POST/PUT and e.t.c
+     * @param string $method - HTTP method - GET/POST/PUT and e.t.c (see RequestInterface:: const)
      * @param string $request - API method, such as api.test
-     * @param array  $options - option for current API METHOD (if need to send)
+     * @param array  $parameters - parameters for current API METHOD (if need to send)
      *
      * @return Response - current library Response object
      *
      * @throws ClientException
      */
-    public function request($method, $request, array $options = [])
+    public function request($method, $request, array $parameters = [])
     {
         try {
-            $request = self::API_URL . '/' . $request;
-            if (!empty($options)) {
-                $request .= '?' . http_build_query($options);
-            }
-            $authentication = [
+            $options = [
                 RequestOptions::FORM_PARAMS => [
                     'token' => $this->token
                 ]
             ];
-            $response = $this->client->request($method, $request, $authentication);
+            if (!empty($parameters)) {
+                switch ($method) {
+                    case RequestInterface::POST:
+                        foreach ($parameters as $parameter => $value) {
+                            $options[RequestOptions::FORM_PARAMS][$parameter] = $value;
+                        }
+                        break;
+                    case RequestInterface::GET:
+                    default:
+                        $request .= '?' . http_build_query($parameters);
+                        break;
+                }
+            }
+            $response = $this->client->request($method, self::API_URL . '/' . $request, $options);
             return $this->prepareResponse($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
