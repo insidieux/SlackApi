@@ -1,8 +1,10 @@
 <?php
 namespace SlackApi;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\RequestOptions;
+use \Guzzle\Http\Message\RequestInterface;
+
+use \GuzzleHttp\ClientInterface;
+use \GuzzleHttp\RequestOptions;
 
 use SlackApi\Exceptions\ClientException;
 use SlackApi\Modules;
@@ -106,7 +108,7 @@ class Client
     }
 
     /**
-     * @param string $method - HTTP method - GET/POST/PUT and e.t.c
+     * @param string $method - HTTP method - GET/POST/PUT and e.t.c (see RequestInterface:: const)
      * @param string $request - API method, such as api.test
      * @param array  $parameters - parameters for current API METHOD (if need to send)
      *
@@ -123,12 +125,19 @@ class Client
                 ]
             ];
             if (!empty($parameters)) {
-                foreach ($parameters as $parameter => $value){
-                    $options[RequestOptions::FORM_PARAMS][$parameter] = $value;
+                switch ($method) {
+                    case RequestInterface::POST:
+                        foreach ($parameters as $parameter => $value) {
+                            $options[RequestOptions::FORM_PARAMS][$parameter] = $value;
+                        }
+                        break;
+                    case RequestInterface::GET:
+                    default:
+                        $request .= '?' . http_build_query($parameters);
+                        break;
                 }
             }
-            $request = self::API_URL . '/' . $request;
-            $response = $this->client->request($method, $request, $options);
+            $response = $this->client->request($method, self::API_URL . '/' . $request, $options);
             return $this->prepareResponse($response);
         } catch (\Exception $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
