@@ -1,15 +1,13 @@
 <?php
 namespace SlackApi;
 
-use \Guzzle\Http\Message\RequestInterface;
-
-use \GuzzleHttp\ClientInterface;
-use \GuzzleHttp\RequestOptions;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\RequestOptions;
 
 use SlackApi\Exceptions\ClientException;
 use SlackApi\Modules;
 
-use \Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Client
@@ -126,12 +124,12 @@ class Client
             ];
             if (!empty($parameters)) {
                 switch ($method) {
-                    case RequestInterface::POST:
+                    case 'POST':
                         foreach ($parameters as $parameter => $value) {
                             $options[RequestOptions::FORM_PARAMS][$parameter] = $value;
                         }
                         break;
-                    case RequestInterface::GET:
+                    case 'GET':
                     default:
                         $request .= '?' . http_build_query($parameters);
                         break;
