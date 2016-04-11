@@ -11,7 +11,7 @@ A simple PHP package for making request to [Slack API](https://api.slack.com/met
 ## Requirements
 
 * PHP 5.5 or greater
-* GuzzleHttp 6.0 or greater
+* [CURL extension for PHP](http://php.net/manual/ru/book.curl.php)
 
 ## Installation
 
@@ -23,11 +23,16 @@ composer require insidieux/slack-api
 
 ## Usage
 
-Simple way to use library 
+Create API client 
 
 ```php
 $client = new \SlackApi\Client('your-token-here', new \GuzzleHttp\Client);
-$response = $client->request('POST', 'module.method', ['argument' => 'value']);
+```
+
+Make request 
+```php
+$client = new \SlackApi\Client('your-token-here', new \GuzzleHttp\Client);
+$response = $client->request('module.method', ['argument' => 'value']);
 $response->toArray();
 ```
 
@@ -53,6 +58,63 @@ Predefined modules:
 * [team] (https://api.slack.com/methods#team)
 * [usergroups] (https://api.slack.com/methods#usergroups)
 * [users] (https://api.slack.com/methods#users)
+
+### Message and attachment objects
+
+Create message object
+
+```php
+$client = new \SlackApi\Client('your-token-here', new GuzzleHttp\Client);
+$message = new \SlackApi\Models\Message($client);
+```
+
+or
+
+```php
+$client = new \SlackApi\Client('your-token-here', new GuzzleHttp\Client);
+$message = $client->makeMessage();
+```
+
+Create new attachment from array
+
+```php
+$data = [
+    'fallback' => 'Some fallback'
+    'pretext'  => 'Some pretext',
+    'text'     => 'good',
+    'text'     => 'Some text'
+]; 
+$attachment1 = new \SlackApi\Models\Attachment($data);
+```
+
+Or use set methods
+```php
+$attachment2 = new \SlackApi\Models\Attachment;
+$attachment2->setText('Some text')
+    ->setColor(\SlackApi\Models\Attachment::COLOR_GOOD)
+    ->setFallback('Some fallback');
+```
+
+Add field to attachment
+
+```php
+$field = new \SlackApi\Models\AttachmentField;
+$field->setShort(false)
+    ->setTitle('Field title')
+    ->setValue('Field value');
+$attachment->addField($field);
+```
+
+Attach object to message
+```php
+$message->attach($attachment);
+```
+
+Send message
+```php
+$response = $message->send();
+$response->toArray()
+```
 
 Author
 -------
