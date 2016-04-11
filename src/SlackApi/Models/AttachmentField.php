@@ -95,9 +95,9 @@ class AttachmentField
     /**
      * Get whether this field is short enough for displaying side-by-side with other fields
      *
-     * @return boolean
+     * @return bool
      */
-    public function getShort()
+    public function isShort()
     {
         return $this->short;
     }
@@ -106,6 +106,7 @@ class AttachmentField
      * Set whether this field is short enough for displaying side-by-side with other fields
      *
      * @param string $value
+     *
      * @return $this
      */
     public function setShort($value)
@@ -124,7 +125,7 @@ class AttachmentField
         return [
             'title' => $this->getTitle(),
             'value' => $this->getValue(),
-            'short' => $this->getShort()
+            'short' => $this->isShort()
         ];
     }
 }

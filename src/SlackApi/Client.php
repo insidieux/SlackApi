@@ -102,15 +102,15 @@ class Client
     {
         $parameters['token'] = $this->token;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::API_URL . '/' . $endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, self::REQUEST_TIMEOUT);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $handler = curl_init();
+        curl_setopt($handler, CURLOPT_URL, self::API_URL . '/' . $endpoint);
+        curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handler, CURLOPT_TIMEOUT, self::REQUEST_TIMEOUT);
+        curl_setopt($handler, CURLOPT_POST, true);
+        curl_setopt($handler, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($handler, CURLOPT_POSTFIELDS, $parameters);
+        $response = curl_exec($handler);
+        curl_close($handler);
 
         return $this->prepareResponse($response);
     }

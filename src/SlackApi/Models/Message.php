@@ -87,7 +87,7 @@ class Message
         $options = [
             'username'    => $this->getUsername(),
             'as_user'     => $this->getAsUser(),
-            'mrkdwn'      => $this->getMarkdown(),
+            'mrkdwn'      => $this->isMarkdown(),
             'attachments' => json_encode($this->getAttachments())
         ];
         return $options;
@@ -209,7 +209,7 @@ class Message
      *
      * @return boolean
      */
-    public function getMarkdown()
+    public function isMarkdown()
     {
         return $this->markdown;
     }
@@ -258,19 +258,6 @@ class Message
     public function from($username)
     {
         $this->setUsername($username);
-        return $this;
-    }
-
-    /**
-     * Change the channel the post will be made to
-     *
-     * @param string $channel
-     *
-     * @return $this
-     */
-    public function to($channel)
-    {
-        $this->setChannel($channel);
         return $this;
     }
 

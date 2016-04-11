@@ -53,8 +53,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
         $message = $this->getMessage();
 
-        $message->to('#channel');
+        $message->toChannel('channel');
         $this->assertSame('#channel', $message->getChannel());
+
+        $message->toUser('user');
+        $this->assertSame('@user', $message->getChannel());
     }
 
     /**
