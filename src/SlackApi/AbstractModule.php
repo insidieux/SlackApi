@@ -36,7 +36,7 @@ abstract class AbstractModule
 
     /**
      * Common helper to make different requests via current library client
-
+     *
      * @param string $request
      * @param array  $parameters
      *

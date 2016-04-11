@@ -67,16 +67,16 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     public function testAttachmentToArray()
     {
         $array = [
-            'fallback'    => 'Fallback',
-            'text'        => 'Text',
-            'pretext'     => 'Pretext',
-            'color'       => 'bad',
-            'mrkdwn_in'   => ['pretext', 'text'],
-            'image_url'   => 'http://fake.host/image.png',
-            'thumb_url'   => 'http://fake.host/image.png',
-            'title'       => 'A title',
-            'title_link'  => 'http://fake.host/',
-            'fields'      => [
+            'fallback'   => 'Fallback',
+            'text'       => 'Text',
+            'pretext'    => 'Pretext',
+            'color'      => 'bad',
+            'mrkdwn_in'  => ['pretext', 'text'],
+            'image_url'  => 'http://fake.host/image.png',
+            'thumb_url'  => 'http://fake.host/image.png',
+            'title'      => 'A title',
+            'title_link' => 'http://fake.host/',
+            'fields'     => [
                 [
                     'title' => 'Title 1',
                     'value' => 'Value 1',
@@ -90,11 +90,13 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $a = new Attachment($array);
-
-        $this->assertSame($array, $a->toArray());
+        $attachment = new Attachment($array);
+        $this->assertSame($array, $attachment->toArray());
     }
 
+    /**
+     *
+     */
     public function testAddFieldAsArray()
     {
         $attachment = new Attachment([
@@ -148,7 +150,8 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
             'title' => 'Title 1',
             'value' => 'Value 1',
             'short' => true
-        ])->addField([
+        ]);
+        $attachment->addField([
             'title' => 'Title 2',
             'value' => 'Value 2',
             'short' => true

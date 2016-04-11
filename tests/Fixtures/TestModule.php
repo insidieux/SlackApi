@@ -14,6 +14,6 @@ class TestModule extends AbstractModule
      */
     public function test()
     {
-        return $this->post('test');
+        return $this->request('test');
     }
 }

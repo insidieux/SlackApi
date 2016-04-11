@@ -9,9 +9,9 @@ use SlackApi\Exceptions\AttachmentException;
  */
 class Attachment implements \JsonSerializable
 {
-    const COLOR_GOOD = 'good';
+    const COLOR_GOOD    = 'good';
     const COLOR_WARNING = 'warning';
-    const COLOR_DANGER = 'danger';
+    const COLOR_DANGER  = 'danger';
 
     /**
      * The fallback text to use for clients that don't support attachments
@@ -178,7 +178,6 @@ class Attachment implements \JsonSerializable
     public function setImageUrl($imageUrl)
     {
         $this->imageUrl = $imageUrl;
-
         return $this;
     }
 
@@ -201,7 +200,6 @@ class Attachment implements \JsonSerializable
     public function setThumbUrl($thumbUrl)
     {
         $this->thumbUrl = $thumbUrl;
-
         return $this;
     }
 
@@ -224,7 +222,6 @@ class Attachment implements \JsonSerializable
     public function setPretext($pretext)
     {
         $this->pretext = $pretext;
-
         return $this;
     }
 
@@ -247,7 +244,6 @@ class Attachment implements \JsonSerializable
     public function setColor($color)
     {
         $this->color = $color;
-
         return $this;
     }
 
@@ -270,7 +266,6 @@ class Attachment implements \JsonSerializable
     public function setTitle($title)
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -293,7 +288,6 @@ class Attachment implements \JsonSerializable
     public function setTitleLink($titleLink)
     {
         $this->titleLink = $titleLink;
-
         return $this;
     }
 
@@ -316,11 +310,9 @@ class Attachment implements \JsonSerializable
     public function setFields(array $fields)
     {
         $this->clearFields();
-
         foreach ($fields as $field) {
             $this->addField($field);
         }
-
         return $this;
     }
 
@@ -337,15 +329,13 @@ class Attachment implements \JsonSerializable
     {
         if ($field instanceof AttachmentField) {
             $this->fields[] = $field;
-
             return $this;
         } elseif (is_array($field)) {
             $this->fields[] = new AttachmentField($field);
-
             return $this;
         }
 
-        throw new AttachmentException('The attachment field must be an instance ofAttachmentField or a array');
+        throw new AttachmentException('The attachment field must be an instance of AttachmentField or a array');
     }
 
     /**
@@ -356,7 +346,6 @@ class Attachment implements \JsonSerializable
     public function clearFields()
     {
         $this->fields = [];
-
         return $this;
     }
 
@@ -390,16 +379,15 @@ class Attachment implements \JsonSerializable
     {
         $options = [
             'fallback'   => $this->fallback,
-            'color'      => $this->color,
-            'pretext'    => $this->pretext,
-            'title'      => $this->title,
-            'title_link' => $this->titleLink,
             'text'       => $this->text,
+            'pretext'    => $this->pretext,
+            'color'      => $this->color,
+            'mrkdwn_in'  => $this->markdownFields,
             'image_url'  => $this->imageUrl,
             'thumb_url'  => $this->thumbUrl,
-            'mrkdwn_in'  => $this->markdownFields
+            'title'      => $this->title,
+            'title_link' => $this->titleLink,
         ];
-
         if (!empty($this->fields)) {
             $fields = [];
             foreach ($this->fields as $field) {
@@ -407,7 +395,6 @@ class Attachment implements \JsonSerializable
             }
             $options['fields'] = $fields;
         }
-
         return $options;
     }
 

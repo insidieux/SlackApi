@@ -2,6 +2,7 @@
 namespace SlackApi\Models;
 
 use SlackApi\Client;
+use SlackApi\Exceptions\MessageException;
 
 /**
  * Class Message
@@ -9,12 +10,6 @@ use SlackApi\Client;
  */
 class Message
 {
-    const PARSE_FULL = 'full';
-    const PARSE_NONE = 'none';
-
-    const LINK_NAMES_DISABLED = 0;
-    const LINK_NAMES_ENABLED = 1;
-
     /**
      * Reference to the Slack client responsible for sending the message
      *
@@ -37,7 +32,7 @@ class Message
     protected $channel;
 
     /**
-     * Bot's user name. Must be used in conjunction with as_user set to false, otherwise ignored
+     * The username the message should be sent as
      *
      * @var string
      */
@@ -48,31 +43,25 @@ class Message
      *
      * @var bool
      */
-    protected $sendAsUser = false;
+    protected $asUser = false;
 
     /**
-     * URL to an image to use as the icon for this message
+     * Whether the message text should be interpreted in Slack's Markdown-like language
      *
-     * @var string
+     * @var boolean
      */
-    protected $iconUrl;
-
-    /**
-     * Markdown support for current message
-     *
-     * @var bool
-     */
-    protected $markdown = false;
+    protected $markdown = true;
 
     /**
      * An array of attachments to send
      *
-     * @var Attachment[]
+     * @var array
      */
     protected $attachments = [];
 
     /**
-     * Message constructor.
+     * Message constructor
+     *
      * @param Client $client
      */
     public function __construct(Client $client)
@@ -87,7 +76,7 @@ class Message
      */
     public function send()
     {
-        return $this->client->chat()->postMessage($this->channel, $this->text, $this->makeOptions());
+        return $this->client->chat()->postMessage($this->getChannel(), $this->getText(), $this->makeOptions());
     }
 
     /**
@@ -96,121 +85,277 @@ class Message
     public function makeOptions()
     {
         $options = [
-            'username' => $this->username,
-            'as_user'  => $this->sendAsUser,
-            'mrkdwn'   => $this->markdown
+            'username'    => $this->getUsername(),
+            'as_user'     => $this->getAsUser(),
+            'mrkdwn'      => $this->getMarkdown(),
+            'attachments' => json_encode($this->getAttachments())
         ];
-        if (!empty($this->attachments)) {
-            $options['attachments'] = json_encode($this->attachments);
-        }
-        if ($this->iconUrl) {
-            $options['icon_url'] = $this->iconUrl;
-        }
-
         return $options;
+    }
+
+    /**
+     * Get the message text
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
     }
 
     /**
      * Set the message text
      *
      * @param string $text
-     *
      * @return $this
      */
     public function setText($text)
     {
-        $this->text = (string)$text;
-
+        $this->text = $text;
         return $this;
+    }
+
+    /**
+     * Get the channel we will post to
+     *
+     * @return string
+     */
+    public function getChannel()
+    {
+        return $this->channel;
     }
 
     /**
      * Set the channel we will post to
      *
      * @param string $channel
-     *
      * @return $this
      */
     public function setChannel($channel)
     {
-        $this->channel = (string)$channel;
-
+        $this->channel = $channel;
         return $this;
     }
 
     /**
-     * Set your bot's user name
+     * Get the username we will post as
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set the username we will post as
      *
      * @param string $username
-     *
      * @return $this
      */
     public function setUsername($username)
     {
-        $this->username = (string)$username;
-
+        $this->username = $username;
         return $this;
     }
 
     /**
-     * Set your bot's user name
+     * Get flag to post the message as the authored user, instead of as a bot
      *
-     * @param string $iconUrl
+     * @return string
+     */
+    public function getAsUser()
+    {
+        return $this->asUser;
+    }
+
+    /**
+     * Set flag to post the message as the authored user, instead of as a bot
+     *
+     * @param bool $value
      *
      * @return $this
      */
-    public function setIconUrl($iconUrl)
+    public function setAsUser($value)
     {
-        $this->iconUrl = (string)$iconUrl;
-
+        $this->asUser = (bool)$value;
         return $this;
     }
 
     /**
-     * Enable post message as the authed user
+     * Enable posting the message as the authored user, instead of as a bot
      *
      * @return $this
      */
     public function enableAsUser()
     {
-        $this->sendAsUser = true;
-
+        $this->setAsUser(true);
         return $this;
     }
 
     /**
-     * Disable post message as the authed user
+     * Disable posting the message as the authored user, instead of as a bot
      *
      * @return $this
      */
     public function disableAsUser()
     {
-        $this->sendAsUser = false;
-
+        $this->setAsUser(false);
         return $this;
     }
 
     /**
-     * Enable markdown support for message
+     * Get whether message text should be formatted with Slack's Markdown-like language
+     *
+     * @return boolean
+     */
+    public function getMarkdown()
+    {
+        return $this->markdown;
+    }
+
+    /**
+     * Set whether message text should be formatted with Slack's Markdown-like language
+     *
+     * @param boolean $value
+     * @return $this
+     */
+    public function setMarkdown($value)
+    {
+        $this->markdown = (bool)$value;
+        return $this;
+    }
+
+    /**
+     * Enable Markdown formatting for the message
      *
      * @return $this
      */
     public function enableMarkdown()
     {
-        $this->markdown = true;
-
+        $this->setMarkdown(true);
         return $this;
     }
 
     /**
-     * Disable markdown support for message
+     * Disable Markdown formatting for the message
      *
      * @return $this
      */
     public function disableMarkdown()
     {
-        $this->markdown = false;
+        $this->setMarkdown(false);
+        return $this;
+    }
 
+    /**
+     * Change the name of the user the post will be made as
+     *
+     * @param string $username
+     *
+     * @return $this
+     */
+    public function from($username)
+    {
+        $this->setUsername($username);
+        return $this;
+    }
+
+    /**
+     * Change the channel the post will be made to
+     *
+     * @param string $channel
+     *
+     * @return $this
+     */
+    public function to($channel)
+    {
+        $this->setChannel($channel);
+        return $this;
+    }
+
+    /**
+     * Change the channel the post will be made to
+     *
+     * @param string $channel
+     *
+     * @return $this
+     */
+    public function toChannel($channel)
+    {
+        $this->setChannel('#' . $channel);
+        return $this;
+    }
+
+    /**
+     * Change the channel the post will be made to
+     *
+     * @param string $user
+     *
+     * @return $this
+     */
+    public function toUser($user)
+    {
+        $this->setChannel('@' . $user);
+        return $this;
+    }
+
+    /**
+     * Add an attachment to the message
+     *
+     * @param array|Attachment $attachment
+     *
+     * @return $this
+     *
+     * @throws MessageException
+     */
+    public function attach($attachment)
+    {
+        if ($attachment instanceof Attachment) {
+            $this->attachments[] = $attachment;
+            return $this;
+        } elseif (is_array($attachment)) {
+            $attachmentObject = new Attachment($attachment);
+            $this->attachments[] = $attachmentObject;
+            return $this;
+        }
+        throw new MessageException('Attachment must be an instance of Attachment or a keyed array');
+    }
+
+    /**
+     * Get the attachments for the message
+     *
+     * @return Attachment[]
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * Set the attachments for the message
+     *
+     * @param array $attachments
+     *
+     * @return $this
+     */
+    public function setAttachments(array $attachments)
+    {
+        $this->clearAttachments();
+        foreach ($attachments as $attachment) {
+            $this->attach($attachment);
+        }
+        return $this;
+    }
+
+    /**
+     * Remove all attachments for the message
+     *
+     * @return $this
+     */
+    public function clearAttachments()
+    {
+        $this->attachments = [];
         return $this;
     }
 }

@@ -66,7 +66,6 @@ class AttachmentField
     public function setTitle($title)
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -90,7 +89,6 @@ class AttachmentField
     public function setValue($value)
     {
         $this->value = $value;
-
         return $this;
     }
 
@@ -113,7 +111,6 @@ class AttachmentField
     public function setShort($value)
     {
         $this->short = (bool)$value;
-
         return $this;
     }
 

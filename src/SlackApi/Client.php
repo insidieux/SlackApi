@@ -71,7 +71,7 @@ class Client
      * Register class with API implementation for next calls, associated with API module
      *
      * @param string $module - API module, for example 'Users'
-     * @param string $class  - class name with methods implementation. MUST extends AbstractModule class
+     * @param string $class - class name with methods implementation. MUST extends AbstractModule class
      *
      * @return $this
      *
@@ -91,8 +91,8 @@ class Client
     /**
      * Common method to make request to Slack API endpoint
      *
-     * @param string $endpoint   - API method, such as api.test
-     * @param array $parameters - parameters for current API METHOD (if need to send)
+     * @param string $endpoint - API method, such as api.test
+     * @param array  $parameters - parameters for current API METHOD (if need to send)
      *
      * @return Response - current library Response object
      *
@@ -119,7 +119,7 @@ class Client
      * Magic call, need for calling API modules, such as users/chat and e.t.c.
      *
      * @param string $name - API module name for next calls
-     * @param mixed $arguments
+     * @param mixed  $arguments
      *
      * @return \SlackApi\AbstractModule
      *
@@ -163,7 +163,7 @@ class Client
      *
      * @throws ClientException
      */
-    private function prepareResponse($response)
+    public function prepareResponse($response)
     {
         $response = json_decode($response, true);
         if (!is_array($response)) {
