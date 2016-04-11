@@ -24,7 +24,7 @@ class Pins extends AbstractModule
      */
     public function add($channel, $file = '', $comment = '', $timestamp = 0)
     {
-        return $this->post('add', [
+        return $this->request('add', [
             'channel'      => $channel,
             'file'         => $file,
             'file_comment' => $comment,
@@ -41,7 +41,7 @@ class Pins extends AbstractModule
      */
     public function getList($channel)
     {
-        return $this->post('list', ['channel' => $channel]);
+        return $this->request('list', ['channel' => $channel]);
     }
 
     /**
@@ -56,7 +56,7 @@ class Pins extends AbstractModule
      */
     public function remove($channel, $file = '', $comment = '', $timestamp = 0)
     {
-        return $this->post('remove', [
+        return $this->request('remove', [
             'channel'      => $channel,
             'file'         => $file,
             'file_comment' => $comment,

@@ -22,7 +22,7 @@ class Chat extends AbstractModule
      */
     public function delete($timestamp, $channel)
     {
-        return $this->post('delete', ['ts' => $timestamp, 'channel' => $channel]);
+        return $this->request('delete', ['ts' => $timestamp, 'channel' => $channel]);
     }
 
     /**
@@ -37,7 +37,7 @@ class Chat extends AbstractModule
     public function postMessage($channel, $text, array $options = [])
     {
         $options = array_merge(['channel' => $channel, 'text' => $text], $options);
-        return $this->post('postMessage', $options);
+        return $this->request('postMessage', $options);
     }
 
     /**
@@ -53,6 +53,6 @@ class Chat extends AbstractModule
     public function update($timestamp, $channel, $text, array $options = [])
     {
         $options = array_merge(['ts' => $timestamp, 'channel' => $channel, 'text' => $text], $options);
-        return $this->post('update', $options);
+        return $this->request('update', $options);
     }
 }

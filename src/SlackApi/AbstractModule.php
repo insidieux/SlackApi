@@ -13,14 +13,14 @@ abstract class AbstractModule
      *
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * Current library client class or its extending
      *
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * AbstractModule constructor.
@@ -35,35 +35,8 @@ abstract class AbstractModule
     }
 
     /**
-     * Common helper to make get requests
-     *
-     * @param string $request
-     * @param array  $parameters
-     *
-     * @return Response
-     */
-    public function get($request, array $parameters = [])
-    {
-        return $this->request('GET', $request, $parameters);
-    }
-
-    /**
-     * Common helper to make post requests
-     *
-     * @param string $request
-     * @param array  $parameters
-     *
-     * @return Response
-     */
-    public function post($request, array $parameters = [])
-    {
-        return $this->request('POST', $request, $parameters);
-    }
-
-    /**
      * Common helper to make different requests via current library client
-     *
-     * @param string $method
+
      * @param string $request
      * @param array  $parameters
      *
@@ -71,9 +44,9 @@ abstract class AbstractModule
      *
      * @throws Exceptions\ClientException
      */
-    public function request($method, $request, array $parameters = [])
+    public function request($request, array $parameters = [])
     {
-        return $this->client->request($method, $this->getRequestEndPoint($request), $parameters);
+        return $this->client->request($this->getRequestEndPoint($request), $parameters);
     }
 
     /**

@@ -31,18 +31,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $client = new Client($this->getRealToken(), new \GuzzleHttp\Client);
-        $this->assertInstanceOf('\SlackApi\Client', $client);
-    }
-
-    /**
-     *
-     */
-    public function testSetClient()
-    {
-        $client = new Client($this->getRealToken(), new \GuzzleHttp\Client);
-
-        $client = $client->setClient(new \GuzzleHttp\Client(['custom-param' => 'custom-value']));
+        $client = new Client($this->getRealToken());
         $this->assertInstanceOf('\SlackApi\Client', $client);
     }
 
@@ -51,7 +40,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testRequestFakeToken()
     {
-        $client = new Client($this->getFakeToken(), new \GuzzleHttp\Client);
+        $client = new Client($this->getFakeToken());
 
         $response = $client->request('POST', 'users.list');
         $this->assertInstanceOf('\SlackApi\Response', $response);
@@ -76,7 +65,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new ClientException($message)));
 
         /** @var Client $mock */
-        $mock->request('POST', 'api.not-found', []);
+        $mock->request('api.not-found', []);
     }
 
     /**
@@ -85,7 +74,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testRequestAPINotFoundMethod()
     {
         $client = new Client($this->getRealToken(), new \GuzzleHttp\Client);
-        $client->request('POST', 'api.not-found', []);
+        $client->request('api.not-found', []);
     }
 
     /**

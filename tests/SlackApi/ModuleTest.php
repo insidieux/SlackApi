@@ -30,7 +30,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
      */
     protected function getClient()
     {
-        return new Client($this->getRealToken(), new \GuzzleHttp\Client);
+        return new Client($this->getRealToken());
     }
 
     /**
@@ -40,35 +40,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new TestModule('api', $this->getClient());
 
-        $response = $module->request('GET', 'test', ['argument' => 'value']);
-        $this->assertInstanceOf('\SlackApi\Response', $response);
-        $this->assertTrue($response->isSuccess());
-
-        $response = $module->request('POST', 'test', ['argument' => 'value']);
-        $this->assertInstanceOf('\SlackApi\Response', $response);
-        $this->assertTrue($response->isSuccess());
-    }
-
-    /**
-     *
-     */
-    public function testGetRequest()
-    {
-        $module = new TestModule('api', $this->getClient());
-
-        $response = $module->get('test', ['argument' => 'value']);
-        $this->assertInstanceOf('\SlackApi\Response', $response);
-        $this->assertTrue($response->isSuccess());
-    }
-
-    /**
-     *
-     */
-    public function testPostRequest()
-    {
-        $module = new TestModule('api', $this->getClient());
-
-        $response = $module->get('test', ['argument' => 'value']);
+        $response = $module->request('test', ['argument' => 'value']);
         $this->assertInstanceOf('\SlackApi\Response', $response);
         $this->assertTrue($response->isSuccess());
     }

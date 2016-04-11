@@ -24,7 +24,7 @@ class Oauth extends AbstractModule
      */
     public function access($clientId, $clientSecret, $code, $redirect = '')
     {
-        return $this->post('access', [
+        return $this->request('access', [
             'client_id'     => $clientId,
             'client_secret' => $clientSecret,
             'code'          => $code,

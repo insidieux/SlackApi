@@ -21,7 +21,7 @@ class Users extends AbstractModule
      */
     public function getPresence($userId)
     {
-        return $this->post('getPresence', ['user' => $userId]);
+        return $this->request('getPresence', ['user' => $userId]);
     }
 
     /**
@@ -33,7 +33,7 @@ class Users extends AbstractModule
      */
     public function info($userId)
     {
-        return $this->post('info', ['user' => $userId]);
+        return $this->request('info', ['user' => $userId]);
     }
 
     /**
@@ -43,7 +43,7 @@ class Users extends AbstractModule
      */
     public function getList()
     {
-        return $this->post('list');
+        return $this->request('list');
     }
 
     /**
@@ -53,7 +53,7 @@ class Users extends AbstractModule
      */
     public function setActive()
     {
-        return $this->post('setActive');
+        return $this->request('setActive');
     }
 
     /**
@@ -65,6 +65,6 @@ class Users extends AbstractModule
      */
     public function setPresence($presence)
     {
-        return $this->post('setPresence', ['presence' => $presence]);
+        return $this->request('setPresence', ['presence' => $presence]);
     }
 }

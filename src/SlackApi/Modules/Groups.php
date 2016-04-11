@@ -21,7 +21,7 @@ class Groups extends AbstractModule
      */
     public function archive($channel)
     {
-        return $this->post('archive', ['channel' => $channel]);
+        return $this->request('archive', ['channel' => $channel]);
     }
 
     /**
@@ -33,7 +33,7 @@ class Groups extends AbstractModule
      */
     public function close($channel)
     {
-        return $this->post('close', ['channel' => $channel]);
+        return $this->request('close', ['channel' => $channel]);
     }
 
     /**
@@ -45,7 +45,7 @@ class Groups extends AbstractModule
      */
     public function create($name)
     {
-        return $this->post('create', ['name' => $name]);
+        return $this->request('create', ['name' => $name]);
     }
 
     /**
@@ -57,7 +57,7 @@ class Groups extends AbstractModule
      */
     public function createChild($channel)
     {
-        return $this->post('createChild', ['channel' => $channel]);
+        return $this->request('createChild', ['channel' => $channel]);
     }
 
     /**
@@ -71,7 +71,7 @@ class Groups extends AbstractModule
     public function history($channel, array $options = [])
     {
         $options = array_merge(['channel' => $channel], $options);
-        return $this->post('history', $options);
+        return $this->request('history', $options);
     }
 
     /**
@@ -83,7 +83,7 @@ class Groups extends AbstractModule
      */
     public function info($channel)
     {
-        return $this->post('info', ['channel' => $channel]);
+        return $this->request('info', ['channel' => $channel]);
     }
 
     /**
@@ -96,7 +96,7 @@ class Groups extends AbstractModule
      */
     public function invite($channel, $user)
     {
-        return $this->post('invite', ['channel' => $channel, 'user' => $user]);
+        return $this->request('invite', ['channel' => $channel, 'user' => $user]);
     }
 
     /**
@@ -109,7 +109,7 @@ class Groups extends AbstractModule
      */
     public function kick($channel, $user)
     {
-        return $this->post('kick', ['channel' => $channel, 'user' => $user]);
+        return $this->request('kick', ['channel' => $channel, 'user' => $user]);
     }
 
     /**
@@ -121,7 +121,7 @@ class Groups extends AbstractModule
      */
     public function leave($channel)
     {
-        return $this->post('leave', ['channel' => $channel]);
+        return $this->request('leave', ['channel' => $channel]);
     }
 
     /**
@@ -133,7 +133,7 @@ class Groups extends AbstractModule
      */
     public function getList($exclude = 0)
     {
-        return $this->post('list', ['exclude_archived' => $exclude]);
+        return $this->request('list', ['exclude_archived' => $exclude]);
     }
 
     /**
@@ -146,7 +146,7 @@ class Groups extends AbstractModule
      */
     public function mark($channel, $timestamp)
     {
-        return $this->post('mark', ['channel' => $channel, 'ts' => $timestamp]);
+        return $this->request('mark', ['channel' => $channel, 'ts' => $timestamp]);
     }
 
     /**
@@ -158,7 +158,7 @@ class Groups extends AbstractModule
      */
     public function open($channel)
     {
-        return $this->post('open', ['channel' => $channel]);
+        return $this->request('open', ['channel' => $channel]);
     }
 
     /**
@@ -171,7 +171,7 @@ class Groups extends AbstractModule
      */
     public function rename($channel, $name)
     {
-        return $this->post('rename', ['channel' => $channel, 'name' => $name]);
+        return $this->request('rename', ['channel' => $channel, 'name' => $name]);
     }
 
     /**
@@ -184,7 +184,7 @@ class Groups extends AbstractModule
      */
     public function setPurpose($channel, $purpose)
     {
-        return $this->post('setPurpose', ['channel' => $channel, 'purpose' => $purpose]);
+        return $this->request('setPurpose', ['channel' => $channel, 'purpose' => $purpose]);
     }
 
     /**
@@ -197,7 +197,7 @@ class Groups extends AbstractModule
      */
     public function setTopic($channel, $topic)
     {
-        return $this->post('setPurpose', ['channel' => $channel, 'topic' => $topic]);
+        return $this->request('setPurpose', ['channel' => $channel, 'topic' => $topic]);
     }
 
     /**
@@ -209,6 +209,6 @@ class Groups extends AbstractModule
      */
     public function unArchive($channel)
     {
-        return $this->post('unarchive', ['channel' => $channel]);
+        return $this->request('unarchive', ['channel' => $channel]);
     }
 }

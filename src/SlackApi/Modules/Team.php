@@ -19,7 +19,7 @@ class Team extends AbstractModule
      */
     public function info()
     {
-        return $this->post('info');
+        return $this->request('info');
     }
 
     /**
@@ -32,7 +32,7 @@ class Team extends AbstractModule
      */
     public function accessLogs($count = 100, $page = 1)
     {
-        return $this->post('accessLogs', ['count' => $count, 'page' => $page]);
+        return $this->request('accessLogs', ['count' => $count, 'page' => $page]);
     }
 
     /**
@@ -44,6 +44,6 @@ class Team extends AbstractModule
      */
     public function integrationLogs(array $options = [])
     {
-        return $this->post('integrationLogs', $options);
+        return $this->request('integrationLogs', $options);
     }
 }
