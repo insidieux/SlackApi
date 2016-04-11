@@ -11,10 +11,11 @@ class Response
     /**
      * @var array
      */
-    private $response;
+    protected $response;
 
     /**
      * Response constructor.
+     *
      * @param array $response
      */
     public function __construct(array $response)

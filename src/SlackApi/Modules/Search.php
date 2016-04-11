@@ -23,7 +23,7 @@ class Search extends AbstractModule
     public function all($query, array $options = [])
     {
         $options = array_merge(['query' => $query], $options);
-        return $this->post('all', $options);
+        return $this->request('all', $options);
     }
 
     /**
@@ -37,7 +37,7 @@ class Search extends AbstractModule
     public function files($query, array $options = [])
     {
         $options = array_merge(['query' => $query], $options);
-        return $this->post('files', $options);
+        return $this->request('files', $options);
     }
 
     /**
@@ -51,6 +51,6 @@ class Search extends AbstractModule
     public function messages($query, array $options = [])
     {
         $options = array_merge(['query' => $query], $options);
-        return $this->post('messages', $options);
+        return $this->request('messages', $options);
     }
 }

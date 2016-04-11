@@ -21,7 +21,7 @@ class Im extends AbstractModule
      */
     public function close($channel)
     {
-        return $this->post('close', ['channel' => $channel]);
+        return $this->request('close', ['channel' => $channel]);
     }
 
     /**
@@ -35,7 +35,7 @@ class Im extends AbstractModule
     public function history($channel, array $options = [])
     {
         $options = array_merge(['channel' => $channel], $options);
-        return $this->post('history', $options);
+        return $this->request('history', $options);
     }
 
     /**
@@ -45,7 +45,7 @@ class Im extends AbstractModule
      */
     public function getList()
     {
-        return $this->post('list');
+        return $this->request('list');
     }
 
     /**
@@ -58,7 +58,7 @@ class Im extends AbstractModule
      */
     public function mark($channel, $timestamp)
     {
-        return $this->post('mark', ['channel' => $channel, 'ts' => $timestamp]);
+        return $this->request('mark', ['channel' => $channel, 'ts' => $timestamp]);
     }
 
     /**
@@ -70,6 +70,6 @@ class Im extends AbstractModule
      */
     public function open($user)
     {
-        return $this->post('open', ['user' => $user]);
+        return $this->request('open', ['user' => $user]);
     }
 }

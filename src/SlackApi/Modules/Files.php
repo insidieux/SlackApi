@@ -22,7 +22,7 @@ class Files extends AbstractModule
      */
     public function delete($file)
     {
-        $this->post('delete', ['file' => $file]);
+        $this->request('delete', ['file' => $file]);
     }
 
     /**
@@ -36,7 +36,7 @@ class Files extends AbstractModule
      */
     public function info($file, $count = 100, $page = 1)
     {
-        $this->post('info', ['file' => $file, 'count' => $count, 'page' => $page]);
+        $this->request('info', ['file' => $file, 'count' => $count, 'page' => $page]);
     }
 
     /**
@@ -48,7 +48,7 @@ class Files extends AbstractModule
      */
     public function getList(array $options = [])
     {
-        $this->post('list', $options);
+        $this->request('list', $options);
     }
 
     /**
@@ -60,7 +60,7 @@ class Files extends AbstractModule
      */
     public function revokePublicURL($file)
     {
-        $this->post('revokePublicURL', ['file' => $file]);
+        $this->request('revokePublicURL', ['file' => $file]);
     }
 
     /**
@@ -72,7 +72,7 @@ class Files extends AbstractModule
      */
     public function sharedPublicURL($file)
     {
-        $this->post('sharedPublicURL', ['file' => $file]);
+        $this->request('sharedPublicURL', ['file' => $file]);
     }
 
     /**
@@ -84,7 +84,7 @@ class Files extends AbstractModule
      */
     public function upload(array $options = [])
     {
-        $this->post('upload', $options);
+        $this->request('upload', $options);
     }
 
     /**
@@ -97,7 +97,7 @@ class Files extends AbstractModule
      */
     public function commentsAdd($file, $comment)
     {
-        $this->post('comments.add', ['file' => $file, 'comment' => $comment]);
+        $this->request('comments.add', ['file' => $file, 'comment' => $comment]);
     }
 
     /**
@@ -110,7 +110,7 @@ class Files extends AbstractModule
      */
     public function commentsDelete($file, $commentId)
     {
-        $this->post('comments.delete', ['file' => $file, 'id' => $commentId]);
+        $this->request('comments.delete', ['file' => $file, 'id' => $commentId]);
     }
 
     /**
@@ -124,6 +124,6 @@ class Files extends AbstractModule
      */
     public function commentsEdit($file, $commentId, $text)
     {
-        $this->post('comments.edit', ['file' => $file, 'id' => $commentId, 'text' => $text]);
+        $this->request('comments.edit', ['file' => $file, 'id' => $commentId, 'text' => $text]);
     }
 }

@@ -24,7 +24,7 @@ class UserGroups extends AbstractModule
     public function create($name, array $options = [])
     {
         $options = array_merge(['name' => $name], $options);
-        return $this->post('create', $options);
+        return $this->request('create', $options);
     }
 
     /**
@@ -37,7 +37,7 @@ class UserGroups extends AbstractModule
      */
     public function disable($group, $count = 0)
     {
-        return $this->post('disable', ['usergroup' => $group, 'include_count' => $count]);
+        return $this->request('disable', ['usergroup' => $group, 'include_count' => $count]);
     }
 
     /**
@@ -50,7 +50,7 @@ class UserGroups extends AbstractModule
      */
     public function enable($group, $count = 0)
     {
-        return $this->post('enable', ['usergroup' => $group, 'include_count' => $count]);
+        return $this->request('enable', ['usergroup' => $group, 'include_count' => $count]);
     }
 
     /**
@@ -64,7 +64,7 @@ class UserGroups extends AbstractModule
      */
     public function getList($disabled = 0, $count = 0, $users = 0)
     {
-        return $this->post('list', [
+        return $this->request('list', [
             'include_disabled' => $disabled,
             'include_count'    => $count,
             'include_users'    => $users,
@@ -82,7 +82,7 @@ class UserGroups extends AbstractModule
     public function update($group, array $options = [])
     {
         $options = array_merge(['usergroup' => $group], $options);
-        return $this->post('update', $options);
+        return $this->request('update', $options);
     }
 
     /**
@@ -95,7 +95,7 @@ class UserGroups extends AbstractModule
      */
     public function usersList($group, $disabled = 0)
     {
-        return $this->post('update', ['usergroup' => $group, 'include_disabled' => $disabled]);
+        return $this->request('update', ['usergroup' => $group, 'include_disabled' => $disabled]);
     }
 
     /**
@@ -109,6 +109,6 @@ class UserGroups extends AbstractModule
      */
     public function usersUpdate($group, $users, $count = 0)
     {
-        return $this->post('update', ['usergroup' => $group, 'users' => $users, 'include_count' => $count]);
+        return $this->request('update', ['usergroup' => $group, 'users' => $users, 'include_count' => $count]);
     }
 }

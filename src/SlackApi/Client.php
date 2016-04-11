@@ -1,13 +1,9 @@
 <?php
 namespace SlackApi;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\RequestOptions;
-
 use SlackApi\Exceptions\ClientException;
+use SlackApi\Models\Message;
 use SlackApi\Modules;
-
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Client
@@ -30,38 +26,36 @@ use Psr\Http\Message\ResponseInterface;
 class Client
 {
     /**
-     *
+     * Slack API base URL
      */
     const API_URL = 'https://slack.com/api';
+
+    /**
+     * Curl request timeout
+     */
+    const REQUEST_TIMEOUT = 3;
 
     /**
      * API token
      *
      * @var string
      */
-    private $token;
+    protected $token;
 
     /**
-     * Guzzle client for making http/curl requests to API
+     * Array of initialized modules for API calls
      *
-     * @var ClientInterface
+     * @var array
      */
-    private $client;
-
-    /**
-     * @var string[]
-     */
-    private $modules = [];
+    protected $modules = [];
 
     /**
      * Client constructor.
-     * @param string          $token - API token
-     * @param ClientInterface $client - Guzzle client for making http/curl requests to API
+     * @param string $token - API token
      */
-    public function __construct($token, ClientInterface $client)
+    public function __construct($token)
     {
         $this->token = $token;
-        $this->client = $client;
 
         $directory = __DIR__ . DIRECTORY_SEPARATOR . 'Modules' . DIRECTORY_SEPARATOR;
         $namespace = __NAMESPACE__ . '\\Modules\\';
@@ -71,18 +65,6 @@ class Client
                 $this->registerModule($file, $namespace . $file);
             }
         }
-    }
-
-    /**
-     * Set Guzzle client for making http/curl requests to API
-     *
-     * @param ClientInterface $client
-     * @return $this
-     */
-    public function setClient(ClientInterface $client)
-    {
-        $this->client = $client;
-        return $this;
     }
 
     /**
@@ -102,47 +84,40 @@ class Client
         }
         $module = $this->prepareModuleName($module);
         $this->modules[$module]['class'] = $class;
+
         return $this;
     }
 
     /**
-     * @param string $method - HTTP method - GET/POST/PUT and e.t.c (see RequestInterface:: const)
-     * @param string $request - API method, such as api.test
+     * Common method to make request to Slack API endpoint
+     *
+     * @param string $endpoint - API method, such as api.test
      * @param array  $parameters - parameters for current API METHOD (if need to send)
      *
      * @return Response - current library Response object
      *
      * @throws ClientException
      */
-    public function request($method, $request, array $parameters = [])
+    public function request($endpoint, array $parameters = [])
     {
-        try {
-            $options = [
-                RequestOptions::FORM_PARAMS => [
-                    'token' => $this->token
-                ]
-            ];
-            if (!empty($parameters)) {
-                switch ($method) {
-                    case 'POST':
-                        foreach ($parameters as $parameter => $value) {
-                            $options[RequestOptions::FORM_PARAMS][$parameter] = $value;
-                        }
-                        break;
-                    case 'GET':
-                    default:
-                        $request .= '?' . http_build_query($parameters);
-                        break;
-                }
-            }
-            $response = $this->client->request($method, self::API_URL . '/' . $request, $options);
-            return $this->prepareResponse($response);
-        } catch (\Exception $exception) {
-            throw new ClientException($exception->getMessage(), $exception->getCode(), $exception);
-        }
+        $parameters['token'] = $this->token;
+
+        $handler = curl_init();
+        curl_setopt($handler, CURLOPT_URL, self::API_URL . '/' . $endpoint);
+        curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handler, CURLOPT_TIMEOUT, self::REQUEST_TIMEOUT);
+        curl_setopt($handler, CURLOPT_POST, true);
+        curl_setopt($handler, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($handler, CURLOPT_POSTFIELDS, $parameters);
+        $response = curl_exec($handler);
+        curl_close($handler);
+
+        return $this->prepareResponse($response);
     }
 
     /**
+     * Magic call, need for calling API modules, such as users/chat and e.t.c.
+     *
      * @param string $name - API module name for next calls
      * @param mixed  $arguments
      *
@@ -170,17 +145,26 @@ class Client
     }
 
     /**
+     * Create Message model
+     *
+     * @return Message
+     */
+    public function makeMessage()
+    {
+        return new Message($this);
+    }
+
+    /**
      * Return current library Response object or throw ClientException if json_decode failed
      *
-     * @param ResponseInterface $response
+     * @param string $response
      *
      * @return Response
      *
      * @throws ClientException
      */
-    public function prepareResponse(ResponseInterface $response)
+    public function prepareResponse($response)
     {
-        $response = $response->getBody()->getContents();
         $response = json_decode($response, true);
         if (!is_array($response)) {
             $message = 'Expected JSON-decoded response data to be of type "array", got "%s"';
@@ -203,6 +187,7 @@ class Client
     {
         $module = (string)$module;
         $module = strtolower($module);
+
         return ucfirst($module);
     }
 }

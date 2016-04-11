@@ -19,7 +19,7 @@ class Dnd extends AbstractModule
      */
     public function endDnd()
     {
-        return $this->post('endDnd');
+        return $this->request('endDnd');
     }
 
     /**
@@ -29,7 +29,7 @@ class Dnd extends AbstractModule
      */
     public function endSnooze()
     {
-        return $this->post('endSnooze');
+        return $this->request('endSnooze');
     }
 
     /**
@@ -41,7 +41,7 @@ class Dnd extends AbstractModule
      */
     public function info($user)
     {
-        return $this->post('info', ['user' => $user]);
+        return $this->request('info', ['user' => $user]);
     }
 
     /**
@@ -53,6 +53,6 @@ class Dnd extends AbstractModule
      */
     public function setSnooze($minutes)
     {
-        return $this->post('setSnooze', ['user' => $minutes]);
+        return $this->request('setSnooze', ['user' => $minutes]);
     }
 }

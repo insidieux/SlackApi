@@ -19,6 +19,6 @@ class Emoji extends AbstractModule
      */
     public function getList()
     {
-        return $this->post('list');
+        return $this->request('list');
     }
 }
