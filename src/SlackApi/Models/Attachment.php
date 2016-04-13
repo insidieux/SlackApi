@@ -335,7 +335,7 @@ class Attachment implements \JsonSerializable
             return $this;
         }
 
-        throw new AttachmentException('The attachment field must be an instance of AttachmentField or a array');
+        throw new AttachmentException('Attachment field must be an instance of AttachmentField or a keyed array');
     }
 
     /**

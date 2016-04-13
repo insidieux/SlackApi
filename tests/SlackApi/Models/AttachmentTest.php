@@ -16,19 +16,27 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     public function testInstantiationFromArray()
     {
         $attachment = new Attachment([
-            'fallback'  => 'Fallback',
-            'text'      => 'Text',
-            'pretext'   => 'Pretext',
-            'color'     => 'bad',
-            'mrkdwn_in' => ['pretext', 'text', 'fields']
+            'fallback'   => 'Fallback',
+            'text'       => 'Text',
+            'image_url'  => 'Image url',
+            'thumb_url'  => 'Thumb url',
+            'pretext'    => 'Pretext',
+            'color'      => 'bad',
+            'mrkdwn_in'  => ['pretext', 'text', 'fields'],
+            'title'      => 'Title',
+            'title_link' => 'Title link',
         ]);
 
         $this->assertEquals('Fallback', $attachment->getFallback());
         $this->assertEquals('Text', $attachment->getText());
+        $this->assertEquals('Image url', $attachment->getImageUrl());
+        $this->assertEquals('Thumb url', $attachment->getThumbUrl());
         $this->assertEquals('Pretext', $attachment->getPretext());
         $this->assertEquals('bad', $attachment->getColor());
         $this->assertEquals([], $attachment->getFields());
         $this->assertEquals(['pretext', 'text', 'fields'], $attachment->getMarkdownFields());
+        $this->assertEquals('Title', $attachment->getTitle());
+        $this->assertEquals('Title link', $attachment->getTitleLink());
     }
 
     /**
@@ -57,8 +65,8 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $fields = $attachment->getFields();
-        $this->assertSame('Title 1', $fields[0]->getTitle());
-        $this->assertSame('Title 2', $fields[1]->getTitle());
+        $this->assertEquals('Title 1', $fields[0]->getTitle());
+        $this->assertEquals('Title 2', $fields[1]->getTitle());
     }
 
     /**
@@ -91,7 +99,18 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ];
 
         $attachment = new Attachment($array);
-        $this->assertSame($array, $attachment->toArray());
+        $this->assertEquals($array, $attachment->toArray());
+    }
+
+
+    /**
+     * @expectedException \SlackApi\Exceptions\AttachmentException
+     * @expectedExceptionMessage Attachment field must be an instance of AttachmentField or a keyed array
+     */
+    public function testAttachBadArguments()
+    {
+        $attachment = new Attachment;
+        $attachment->addField('Some bad argument');
     }
 
     /**
@@ -99,11 +118,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddFieldAsArray()
     {
-        $attachment = new Attachment([
-            'fallback' => 'Fallback',
-            'text'     => 'Text'
-        ]);
-
+        $attachment = new Attachment;
         $attachment->addField([
             'title' => 'Title 1',
             'value' => 'Value 1',
@@ -111,8 +126,8 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $fields = $attachment->getFields();
-        $this->assertSame(1, count($fields));
-        $this->assertSame('Title 1', $fields[0]->getTitle());
+        $this->assertEquals(1, count($fields));
+        $this->assertEquals('Title 1', $fields[0]->getTitle());
     }
 
     /**
@@ -120,20 +135,17 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddFieldAsObject()
     {
-        $attachment = new Attachment([
-            'fallback' => 'Fallback',
-            'text'     => 'Text'
-        ]);
+        $attachment = new Attachment;
         $field = new AttachmentField([
             'title' => 'Title 1',
             'value' => 'Value 1',
             'short' => true
         ]);
         $attachment->addField($field);
-        $fields = $attachment->getFields();
 
-        $this->assertSame(1, count($fields));
-        $this->assertSame($field, $fields[0]);
+        $fields = $attachment->getFields();
+        $this->assertEquals(1, count($fields));
+        $this->assertEquals($field, $fields[0]);
     }
 
     /**
@@ -141,11 +153,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetFields()
     {
-        $attachment = new Attachment([
-            'fallback' => 'Fallback',
-            'text'     => 'Text'
-        ]);
-
+        $attachment = new Attachment;
         $attachment->addField([
             'title' => 'Title 1',
             'value' => 'Value 1',
@@ -156,9 +164,32 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
             'value' => 'Value 2',
             'short' => true
         ]);
-        $this->assertSame(2, count($attachment->getFields()));
+
+        $this->assertEquals(2, count($attachment->getFields()));
 
         $attachment->setFields([]);
-        $this->assertSame(0, count($attachment->getFields()));
+        $this->assertEquals(0, count($attachment->getFields()));
+    }
+
+    /**
+     *
+     */
+    public function testJsonSerialize()
+    {
+        $options = [
+            'fallback'   => 'Fallback',
+            'text'       => 'Text',
+            'pretext'    => 'Pretext',
+            'color'      => 'bad',
+            'mrkdwn_in'  => ['pretext', 'text', 'fields'],
+            'image_url'  => 'Image url',
+            'thumb_url'  => 'Thumb url',
+            'title'      => 'Title',
+            'title_link' => 'Title link',
+        ];
+
+        $attachment = new Attachment($options);
+        $this->assertEquals($options, $attachment->toArray());
+        $this->assertEquals(json_encode($options), json_encode($attachment));
     }
 }

@@ -20,6 +20,14 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return string
+     */
+    protected function getFakeToken()
+    {
+        return 'fake-token';
+    }
+
+    /**
      * @return Message
      */
     protected function getMessage()
@@ -28,11 +36,28 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return Message
+     */
+    protected function getFakeTokenMessage()
+    {
+        return new Message(new Client($this->getFakeToken()));
+    }
+
+    /**
      *
      */
     public function testInstantiation()
     {
         $this->assertInstanceOf('SlackApi\Models\Message', $this->getMessage());
+    }
+
+    /**
+     *
+     */
+    public function testSendMessage()
+    {
+        $message = $this->getFakeTokenMessage();
+        $this->assertInstanceOf('SlackApi\Response', $message->send());
     }
 
     /**
@@ -91,6 +116,72 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         $message->setUsername('username');
         $this->assertSame('username', $message->getUsername());
+    }
+
+    /**
+     *
+     */
+    public function testSetAsUserWithToggle()
+    {
+        $message = $this->getMessage();
+
+        $message->enableAsUser();
+        $this->assertTrue($message->isAsUser());
+
+        $message->disableAsUser();
+        $this->assertFalse($message->isAsUser());
+    }
+
+    /**
+     *
+     */
+    public function testSetAsUserWithSetter()
+    {
+        $message = $this->getMessage();
+
+        $message->setAsUser(true);
+        $this->assertTrue($message->isAsUser());
+
+        $message->setAsUser(false);
+        $this->assertFalse($message->isAsUser());
+    }
+
+    /**
+     *
+     */
+    public function testSetMarkdownWithToggle()
+    {
+        $message = $this->getMessage();
+
+        $message->enableMarkdown();
+        $this->assertTrue($message->isMarkdown());
+
+        $message->disableMarkdown();
+        $this->assertFalse($message->isMarkdown());
+    }
+
+    /**
+     *
+     */
+    public function testSetMarkdownWithSetter()
+    {
+        $message = $this->getMessage();
+
+        $message->setMarkdown(true);
+        $this->assertTrue($message->isMarkdown());
+
+        $message->setMarkdown(false);
+        $this->assertFalse($message->isMarkdown());
+    }
+
+    /**
+     * @expectedException \SlackApi\Exceptions\MessageException
+     * @expectedExceptionMessage Attachment must be an instance of Attachment or a keyed array
+     */
+    public function testAttachBadArguments()
+    {
+        $message = $this->getMessage();
+        $message->attach('Some bad argument');
     }
 
     /**
@@ -182,5 +273,24 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $message->setAttachments([['fallback' => 'a', 'text' => 'b']]);
         $this->assertEquals(1, count($message->getAttachments()));
         $this->assertEquals('a', $message->getAttachments()[0]->getFallback());
+    }
+
+    /**
+     *
+     */
+    public function testMakeOptions()
+    {
+        $message = $this->getMessage();
+        $message->setUsername('username')
+            ->setAsUser(true)
+            ->enableMarkdown();
+
+        $options = [
+            'username'    => 'username',
+            'as_user'     => true,
+            'mrkdwn'      => true,
+            'attachments' => json_encode([])
+        ];
+        $this->assertEquals($options, $message->makeOptions());
     }
 }

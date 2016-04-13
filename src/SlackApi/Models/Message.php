@@ -86,7 +86,7 @@ class Message
     {
         $options = [
             'username'    => $this->getUsername(),
-            'as_user'     => $this->getAsUser(),
+            'as_user'     => $this->isAsUser(),
             'mrkdwn'      => $this->isMarkdown(),
             'attachments' => json_encode($this->getAttachments())
         ];
@@ -160,11 +160,50 @@ class Message
     }
 
     /**
+     * Change the name of the user the post will be made as
+     *
+     * @param string $username
+     *
+     * @return $this
+     */
+    public function from($username)
+    {
+        $this->setUsername($username);
+        return $this;
+    }
+
+    /**
+     * Change the channel the post will be made to
+     *
+     * @param string $channel
+     *
+     * @return $this
+     */
+    public function toChannel($channel)
+    {
+        $this->setChannel('#' . $channel);
+        return $this;
+    }
+
+    /**
+     * Change the channel the post will be made to
+     *
+     * @param string $user
+     *
+     * @return $this
+     */
+    public function toUser($user)
+    {
+        $this->setChannel('@' . $user);
+        return $this;
+    }
+
+    /**
      * Get flag to post the message as the authored user, instead of as a bot
      *
-     * @return string
+     * @return bool
      */
-    public function getAsUser()
+    public function isAsUser()
     {
         return $this->asUser;
     }
@@ -245,45 +284,6 @@ class Message
     public function disableMarkdown()
     {
         $this->setMarkdown(false);
-        return $this;
-    }
-
-    /**
-     * Change the name of the user the post will be made as
-     *
-     * @param string $username
-     *
-     * @return $this
-     */
-    public function from($username)
-    {
-        $this->setUsername($username);
-        return $this;
-    }
-
-    /**
-     * Change the channel the post will be made to
-     *
-     * @param string $channel
-     *
-     * @return $this
-     */
-    public function toChannel($channel)
-    {
-        $this->setChannel('#' . $channel);
-        return $this;
-    }
-
-    /**
-     * Change the channel the post will be made to
-     *
-     * @param string $user
-     *
-     * @return $this
-     */
-    public function toUser($user)
-    {
-        $this->setChannel('@' . $user);
         return $this;
     }
 
