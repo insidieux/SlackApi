@@ -2,6 +2,8 @@
 namespace SlackApi;
 
 use SlackApi\Exceptions\ClientException;
+use SlackApi\Models\Attachment;
+use SlackApi\Models\AttachmentField;
 use SlackApi\Models\Message;
 use SlackApi\Modules;
 
@@ -108,7 +110,7 @@ class Client
         curl_setopt($handler, CURLOPT_TIMEOUT, self::REQUEST_TIMEOUT);
         curl_setopt($handler, CURLOPT_POST, true);
         curl_setopt($handler, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($handler, CURLOPT_POSTFIELDS, $parameters);
+        curl_setopt($handler, CURLOPT_POSTFIELDS, http_build_query($parameters));
         $response = curl_exec($handler);
         curl_close($handler);
 
@@ -152,6 +154,30 @@ class Client
     public function makeMessage()
     {
         return new Message($this);
+    }
+
+    /**
+     * Create Attachment model
+     *
+     * @param array $attributes
+     *
+     * @return Attachment
+     */
+    public function makeAttachment(array $attributes = [])
+    {
+        return new Attachment($attributes);
+    }
+
+    /**
+     * Create AttachmentField model
+     *
+     * @param array $attributes
+     *
+     * @return AttachmentField
+     */
+    public function makeAttachmentField(array $attributes = [])
+    {
+        return new AttachmentField($attributes);
     }
 
     /**

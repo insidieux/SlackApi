@@ -319,7 +319,7 @@ class Attachment implements \JsonSerializable
     /**
      * Add a field to the attachment
      *
-     * @param $field
+     * @param array|AttachmentField $field
      *
      * @return $this
      *

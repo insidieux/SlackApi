@@ -33,7 +33,7 @@ class AttachmentField
      *
      * @param array $attributes
      */
-    public function __construct(array $attributes)
+    public function __construct(array $attributes = [])
     {
         if (isset($attributes['title'])) {
             $this->setTitle($attributes['title']);

@@ -138,4 +138,24 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $message = $client->makeMessage();
         $this->assertInstanceOf('\SlackApi\Models\Message', $message);
     }
+
+    /**
+     *
+     */
+    public function testMakeAttachment()
+    {
+        $client = new Client($this->getRealToken());
+        $message = $client->makeAttachment();
+        $this->assertInstanceOf('\SlackApi\Models\Attachment', $message);
+    }
+
+    /**
+     *
+     */
+    public function testMakeAttachmentField()
+    {
+        $client = new Client($this->getRealToken());
+        $message = $client->makeAttachmentField();
+        $this->assertInstanceOf('\SlackApi\Models\AttachmentField', $message);
+    }
 }
