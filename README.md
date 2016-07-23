@@ -26,12 +26,12 @@ composer require insidieux/slack-api
 Create API client 
 
 ```php
-$client = new \SlackApi\Client('your-token-here', new \GuzzleHttp\Client);
+$client = new \SlackApi\Client('your-token-here');
 ```
 
 Make request 
 ```php
-$client = new \SlackApi\Client('your-token-here', new \GuzzleHttp\Client);
+$client = new \SlackApi\Client('your-token-here');
 $response = $client->request('module.method', ['argument' => 'value']);
 $response->toArray();
 ```
@@ -39,7 +39,7 @@ $response->toArray();
 Or you can use predefined modules and methods
 
 ```php
-$client = new \SlackApi\Client('your-token-here', new GuzzleHttp\Client);
+$client = new \SlackApi\Client('your-token-here');
 $response = $client->users()->getList();
 $response->toArray()
 ```
@@ -64,14 +64,14 @@ Predefined modules:
 Create message object
 
 ```php
-$client = new \SlackApi\Client('your-token-here', new GuzzleHttp\Client);
+$client = new \SlackApi\Client('your-token-here');
 $message = new \SlackApi\Models\Message($client);
 ```
 
 or
 
 ```php
-$client = new \SlackApi\Client('your-token-here', new GuzzleHttp\Client);
+$client = new \SlackApi\Client('your-token-here');
 $message = $client->makeMessage();
 ```
 
