@@ -2,6 +2,7 @@
 namespace tests\SlackApi;
 
 use SlackApi\Client;
+use SlackApi\Response;
 use \tests\Fixtures\TestModule;
 
 /**
@@ -38,21 +39,15 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
      */
     public function testRequest()
     {
-        $module = new TestModule('api', $this->getClient());
-
-        $response = $module->request('test', ['argument' => 'value']);
-        $this->assertInstanceOf('\SlackApi\Response', $response);
-        $this->assertTrue($response->isSuccess());
-    }
-
-    /**
-     *
-     */
-    public function testPredefinedRequest()
-    {
-        $module = new TestModule('api', $this->getClient());
-
-        $response = $module->test();
+        $mock = $this->getMockBuilder(TestModule::class)
+            ->setMethods(['request'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mock->expects($this->once())
+            ->method('request')
+            ->will($this->returnValue(new Response(['ok' => true])));
+        /** @var TestModule $mock */
+        $response = $mock->request('test');
         $this->assertInstanceOf('\SlackApi\Response', $response);
         $this->assertTrue($response->isSuccess());
     }
