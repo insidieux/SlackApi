@@ -6,6 +6,8 @@ use SlackApi\Exceptions\AttachmentException;
 /**
  * Class Attachment
  * @package SlackApi\Models
+ *
+ * todo add attachment action model
  */
 class Attachment implements \JsonSerializable
 {
@@ -76,6 +78,16 @@ class Attachment implements \JsonSerializable
     protected $markdownFields = [];
 
     /**
+     * @var int
+     */
+    protected $callbackId;
+
+    /**
+     * @var array
+     */
+    protected $actions = [];
+
+    /**
      * Attachment constructor.
      * @param array $attributes
      */
@@ -110,6 +122,9 @@ class Attachment implements \JsonSerializable
         }
         if (isset($attributes['title_link'])) {
             $this->setTitleLink($attributes['title_link']);
+        }
+        if (isset($attributes['actions'])) {
+            $this->setActions($attributes['actions']);
         }
     }
 
@@ -150,6 +165,7 @@ class Attachment implements \JsonSerializable
      * Set the optional text to appear within the attachment
      *
      * @param string $text
+     *
      * @return $this
      */
     public function setText($text)
@@ -373,27 +389,73 @@ class Attachment implements \JsonSerializable
     }
 
     /**
+     * @return int
+     */
+    public function getCallbackId()
+    {
+        return $this->callbackId;
+    }
+
+    /**
+     * @param int $callbackId
+     */
+    public function setCallbackId($callbackId)
+    {
+        $this->callbackId = $callbackId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @param array $actions
+     */
+    public function setActions($actions)
+    {
+        $this->actions = $actions;
+    }
+
+    /**
+     * @param $action
+     */
+    public function addAction($action)
+    {
+        $this->actions[] = $action;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
     {
         $options = [
-            'fallback'   => $this->fallback,
-            'text'       => $this->text,
-            'pretext'    => $this->pretext,
-            'color'      => $this->color,
-            'mrkdwn_in'  => $this->markdownFields,
-            'image_url'  => $this->imageUrl,
-            'thumb_url'  => $this->thumbUrl,
-            'title'      => $this->title,
-            'title_link' => $this->titleLink,
+            'fallback'    => $this->fallback,
+            'text'        => $this->text,
+            'pretext'     => $this->pretext,
+            'color'       => $this->color,
+            'mrkdwn_in'   => $this->markdownFields,
+            'image_url'   => $this->imageUrl,
+            'thumb_url'   => $this->thumbUrl,
+            'title'       => $this->title,
+            'title_link'  => $this->titleLink,
         ];
+        if ($this->callbackId !== null) {
+            $options['callback_id'] = $this->callbackId;
+        }
         if (!empty($this->fields)) {
             $fields = [];
             foreach ($this->fields as $field) {
                 $fields[] = $field->toArray();
             }
             $options['fields'] = $fields;
+        }
+        if (!empty($this->actions)) {
+            $options['actions'] = $this->actions;
         }
         return $options;
     }
