@@ -443,8 +443,10 @@ class Attachment implements \JsonSerializable
             'thumb_url'   => $this->thumbUrl,
             'title'       => $this->title,
             'title_link'  => $this->titleLink,
-            'callback_id' => $this->callbackId,
         ];
+        if ($this->callbackId !== null) {
+            $options['callback_id'] = $this->callbackId;
+        }
         if (!empty($this->fields)) {
             $fields = [];
             foreach ($this->fields as $field) {
