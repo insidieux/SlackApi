@@ -33,9 +33,9 @@ class Client
     const API_URL = 'https://slack.com/api';
 
     /**
-     * Curl request timeout
+     * Default curl request timeout
      */
-    const REQUEST_TIMEOUT = 3;
+    const DEFAULT_REQUEST_TIMEOUT = 3;
 
     /**
      * API token
@@ -43,6 +43,13 @@ class Client
      * @var string
      */
     protected $token;
+
+    /**
+     * Curl request timeout
+     *
+     * @var int
+     */
+    protected $timeout = self::DEFAULT_REQUEST_TIMEOUT;
 
     /**
      * Array of initialized modules for API calls
@@ -107,7 +114,7 @@ class Client
         $handler = curl_init();
         curl_setopt($handler, CURLOPT_URL, self::API_URL . '/' . $endpoint);
         curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($handler, CURLOPT_TIMEOUT, self::REQUEST_TIMEOUT);
+        curl_setopt($handler, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($handler, CURLOPT_POST, true);
         curl_setopt($handler, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($handler, CURLOPT_POSTFIELDS, http_build_query($parameters));
@@ -215,5 +222,13 @@ class Client
         $module = strtolower($module);
 
         return ucfirst($module);
+    }
+
+    /**
+     * @param int $timeout
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
     }
 }

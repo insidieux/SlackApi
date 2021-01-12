@@ -39,11 +39,13 @@ class Users extends AbstractModule
     /**
      * @link https://api.slack.com/methods/users.list
      *
+     * @param array $attributes
+     *
      * @return \SlackApi\Response
      */
-    public function getList()
+    public function getList($attributes = [])
     {
-        return $this->request('list');
+        return $this->request('list', $attributes);
     }
 
     /**
