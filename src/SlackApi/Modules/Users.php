@@ -1,4 +1,5 @@
 <?php
+
 namespace SlackApi\Modules;
 
 use SlackApi\AbstractModule;
@@ -6,7 +7,7 @@ use SlackApi\AbstractModule;
 /**
  * Class Users
  *
- * @link https://api.slack.com/methods#users
+ * @link    https://api.slack.com/methods#users
  *
  * @package SlackApi\Modules
  */
@@ -39,13 +40,18 @@ class Users extends AbstractModule
     /**
      * @link https://api.slack.com/methods/users.list
      *
-     * @param array $attributes
+     * @param int|null    $limit  The maximum number of items to return
+     * @param string|null $cursor Page pointer
      *
      * @return \SlackApi\Response
      */
-    public function getList($attributes = [])
+    public function getList($limit = null, $cursor = null)
     {
-        return $this->request('list', $attributes);
+        $attributes = [
+            'limit'  => $limit,
+            'cursor' => $cursor
+        ];
+        return $this->request('list', array_filter($attributes));
     }
 
     /**
