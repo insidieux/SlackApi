@@ -1,4 +1,5 @@
 <?php
+
 namespace SlackApi;
 
 use SlackApi\Exceptions\ClientException;
@@ -61,6 +62,7 @@ class Client
     /**
      * Client constructor.
      * @param string $token - API token
+     * @throws ClientException
      */
     public function __construct($token)
     {
@@ -120,7 +122,9 @@ class Client
         curl_setopt($handler, CURLOPT_POSTFIELDS, http_build_query($parameters));
         $response = curl_exec($handler);
         curl_close($handler);
-
+        if (empty($error = curl_error($handler)) === false) {
+            throw new ClientException(sprintf('CURL request error: %s', $error));
+        }
         return $this->prepareResponse($response);
     }
 
