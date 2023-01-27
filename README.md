@@ -1,5 +1,9 @@
 # SlackApi
 
+| This project is very outdated and behind the current actual version of php, as well as the current version of the Slack API. We strongly DO NOT RECOMMEND you to use this library and we advise you to switch to one of the published packages from the official Slack documentation - https://api.slack.com/community#php |
+|-----------------------------------------|
+
+
 [![Build Status](https://travis-ci.org/insidieux/SlackApi.svg?branch=master)](https://travis-ci.org/insidieux/SlackApi)
 [![Code Climate](https://codeclimate.com/github/insidieux/SlackApi/badges/gpa.svg)](https://codeclimate.com/github/insidieux/SlackApi)
 [![Test Coverage](https://codeclimate.com/github/insidieux/SlackApi/badges/coverage.svg)](https://codeclimate.com/github/insidieux/SlackApi/coverage)
